@@ -11,9 +11,9 @@ from sklearn.model_selection import RandomizedSearchCV
 
 def RandomForest(x_train, y_train, x_test):
     y_test = []
-    rnd = RandomForestClassifier()
+    rnd = RandomForestClassifier(n_estimators=200)
     param_dist = {
-        "n_estimators": range(100, 300, 50),
+        # "n_estimators": range(100, 300, 50),
         "max_depth": [3, None],
         "min_samples_split": sp_randint(2, 11),
         "max_leaf_nodes": sp_randint(100, 300),
@@ -23,7 +23,7 @@ def RandomForest(x_train, y_train, x_test):
     # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
     # rnd_clf = GridSearchCV(rnd, parameters)
     # rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
-    n_iter_search = 20
+    n_iter_search = 100
     rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=n_iter_search)
     rnd_clf.fit(x_train, y_train)
     print(rnd_clf.best_estimator_)

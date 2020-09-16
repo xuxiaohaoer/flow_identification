@@ -13,11 +13,12 @@ def RandomForest(x_train, y_train, x_test):
     y_test = []
     rnd = RandomForestClassifier()
     param_dist = {
+        "n_estimators": range(100, 300, 50),
         "max_depth": [3, None],
         "min_samples_split": sp_randint(2, 11),
         "max_leaf_nodes": sp_randint(100, 300),
         "bootstrap": sp_randint(1, 11),
-        "criterion": ['gini','entropy']
+        "criterion": ['gini', 'entropy']
     }  # 随机搜索
     # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
     # rnd_clf = GridSearchCV(rnd, parameters)

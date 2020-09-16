@@ -6,23 +6,27 @@ from sklearn.model_selection import GridSearchCV
 # import lightgbm as lgb
 from scipy.stats import randint as sp_randint
 import numpy as np
+from sklearn.model_selection import RandomizedSearchCV
 
 
 def RandomForest(x_train, y_train, x_test):
     y_test = []
-    # param_dist = {
-    #     # "max_depth": [3, None],
-    #     # "min_samples_split": sp_randint(2, 11),
-    #     # "max_leaf_nodes":sp_randint(100, 300),
-    #     # "bootstrap": sp_randint(1, 11),
-    #     # "criterion": ['gini','entropy']
-    # }
-    parameters = {"n_estimators": range(100, 300, 50)}
-    # rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1)
     rnd = RandomForestClassifier()
-    rnd_clf = GridSearchCV(rnd, parameters)
+    param_dist = {
+        "max_depth": [3, None],
+        "min_samples_split": sp_randint(2, 11),
+        "max_leaf_nodes": sp_randint(100, 300),
+        "bootstrap": sp_randint(1, 11),
+        "criterion": ['gini','entropy']
+    }  # 随机搜索
+    # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
+    # rnd_clf = GridSearchCV(rnd, parameters)
+    # rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
+    n_iter_search = 20
+    rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=n_iter_search)
     rnd_clf.fit(x_train, y_train)
     print(rnd_clf.best_estimator_)
+    print(rnd_clf.cv_results_)
     y_test = rnd_clf.predict(x_test)
     # for sample in x_test:
     #     y_test.append(rnd_clf.predict([sample]))

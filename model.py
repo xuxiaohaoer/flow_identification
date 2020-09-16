@@ -2,14 +2,27 @@ from sklearn.ensemble import RandomForestClassifier
 # from xgboost.sklearn import XGBClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import VotingClassifier
+from sklearn.model_selection import GridSearchCV
 # import lightgbm as lgb
+from scipy.stats import randint as sp_randint
 import numpy as np
 
 
 def RandomForest(x_train, y_train, x_test):
     y_test = []
-    rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1)
+    # param_dist = {
+    #     # "max_depth": [3, None],
+    #     # "min_samples_split": sp_randint(2, 11),
+    #     # "max_leaf_nodes":sp_randint(100, 300),
+    #     # "bootstrap": sp_randint(1, 11),
+    #     # "criterion": ['gini','entropy']
+    # }
+    parameters = {"n_estimators": range(100, 300, 50)}
+    # rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1)
+    rnd = RandomForestClassifier()
+    rnd_clf = GridSearchCV(rnd, parameters)
     rnd_clf.fit(x_train, y_train)
+    print(rnd_clf.best_estimator_)
     y_test = rnd_clf.predict(x_test)
     # for sample in x_test:
     #     y_test.append(rnd_clf.predict([sample]))

@@ -14,6 +14,7 @@ if __name__ == '__main__':
     x = x_train + x_test
     y = y_train + y_label
     tem = np.array(x)
+
     for i in range(len(tem[0])):
         print(tem[:, i])
         mutual = metrics.mutual_info_score(tem[:, i], y)

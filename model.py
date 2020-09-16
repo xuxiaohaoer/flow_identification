@@ -4,27 +4,25 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import GridSearchCV
 # import lightgbm as lgb
-from scipy.stats import randint as sp_randint
+from scipy.stats import randint
 import numpy as np
 from sklearn.model_selection import RandomizedSearchCV
 
 
 def RandomForest(x_train, y_train, x_test):
     y_test = []
-    rnd = RandomForestClassifier(n_estimators=200)
+    rnd = RandomForestClassifier()
     param_dist = {
-        # "n_estimators": range(100, 300, 50),
+        "n_estimators": range(100, 300, 25),
         "max_depth": [3, None],
-        "min_samples_split": sp_randint(2, 11),
-        "max_leaf_nodes": sp_randint(100, 300),
-        "bootstrap": sp_randint(1, 11),
+        "min_samples_split": range(2, 11, 1),
+        "max_leaf_nodes": range(100, 300, 20),
         "criterion": ['gini', 'entropy']
     }  # 随机搜索
     # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
     # rnd_clf = GridSearchCV(rnd, parameters)
     # rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
-    n_iter_search = 100
-    rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=n_iter_search)
+    rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=100)
     rnd_clf.fit(x_train, y_train)
     print(rnd_clf.best_estimator_)
     print(rnd_clf.cv_results_)

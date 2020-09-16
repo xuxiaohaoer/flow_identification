@@ -8,7 +8,6 @@ import model
 import os
 import random
 import index
-
 x_train = []
 y_train = []
 x_test = []

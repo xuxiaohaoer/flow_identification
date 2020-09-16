@@ -1,8 +1,10 @@
 import pre
 import numpy as np
 from sklearn.model_selection import train_test_split
-x_black = pre.pre_pcap("data/eta_1/train/black/")
-x_white = pre.pre_pcap("data/eta_1/train/white/")
+from data_read import data_read
+# x_black = pre.pre_pcap("data/eta_1/train/black/")
+# x_white = pre.pre_pcap("data/eta_1/train/white/")
+x_black, x_white = data_read()
 x_train = []
 y_train = []
 x_test = []

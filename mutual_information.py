@@ -18,4 +18,4 @@ if __name__ == '__main__':
     for i in range(len(tem[0])):
         print(tem[:, i])
         mutual = metrics.mutual_info_score(tem[:, i], y)
-        print(i, mutual)
+        print(feature_list[i], mutual)

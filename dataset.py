@@ -36,7 +36,8 @@ def pre_data():
     for sample in x_white:
         X.append(sample)
         Y.append("white")
-    x_train, x_test, y_train, y_label = train_test_split(X, Y, test_size=0.33, random_state=42)
+    x_train, x_test, y_train, y_label = train_test_split(X, Y, test_size=0.33)
+    # x_train, x_test, y_train, y_label = train_test_split(X, Y, test_size=0.33, random_state=42)
     print("pre_data end")
     return(x_train, y_train, x_test, y_label)
 

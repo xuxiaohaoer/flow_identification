@@ -96,15 +96,25 @@ class features(object):
         self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet = cal(self.packetsize_packet_sequence)
         self.cipher_support_num = cal_hex(self.cipher_support)
         self.cipher_content_ratio = round(cal_ratio(self.cipher_content), 4)
+        # return [self.pack_num, time, self.dport, self.flow_num, ip_src, self.cipher_num, self.packetsize_size,
+        #         self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
+        #         self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
+        #         self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet,
+        #         self.max_packetsize_src, self.min_packetsize_src, self.mean_packetsize_src, self.std_packetsize_src,
+        #         self.max_packetsize_dst, self.min_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
+        #         self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow,
+        #         self.cipher, self.cipher_num, self.cipher_content_ratio
+        #         ]
         return [self.pack_num, time, self.dport, self.flow_num, ip_src, self.cipher_num, self.packetsize_size,
                 self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
                 self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
-                self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet,
-                self.max_packetsize_src, self.min_packetsize_src, self.mean_packetsize_src, self.std_packetsize_src,
-                self.max_packetsize_dst, self.min_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
+                self.max_packetsize_packet,  self.mean_packetsize_packet, self.std_packetsize_packet,
+                self.max_packetsize_src,  self.mean_packetsize_src, self.std_packetsize_src,
+                self.max_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
                 self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow,
-                self.cipher, self.cipher_num, self.cipher_content_ratio
+                self.cipher_num, self.cipher_content_ratio
                 ]
+
 
 
 

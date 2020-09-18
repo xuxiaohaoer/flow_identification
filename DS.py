@@ -26,9 +26,9 @@ print("RandomFroest")
 y_test = model.RandomForest(x_train, y_train, x_test)
 index.cal_index(y_test, y_label)
 
-print("GradientBoosting")
-y_test = model.GradientBoosting(x_train, y_train, x_test)
-index.cal_index(y_test, y_label)
+# print("GradientBoosting")
+# y_test = model.GradientBoosting(x_train, y_train, x_test)
+# index.cal_index(y_test, y_label)
 # f = open("result.txt", 'w')
 # for i in range(len(x_test)):
 #     str = x_name[i] + "," + y_test[i][0] + "\n"

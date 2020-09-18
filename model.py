@@ -26,14 +26,7 @@ def RandomForest(x_train, y_train, x_test):
     # rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
     rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=300)
     rnd_clf.fit(x_train, y_train)
-
-    f = open('parameter', 'a+')
-    f.write("Random Forest")
-    f.write(time.asctime(time.localtime(time.time())))
-    f.write(rnd_clf.best_estimator_.__dict__)
-    print(rnd_clf.best_estimator_)
-    f.write(time.asctime(time.localtime(time.time())))
-    f.close()
+    print(time.asctime(time.localtime(time.time())))
 
     y_test = rnd_clf.predict(x_test)
     # for sample in x_test:
@@ -46,23 +39,17 @@ def GradientBoosting(x_train, y_train, x_test):
     gbm = GradientBoostingClassifier()
     param_dist = {
         "n_estimators": range(50, 150, 20),
-        "learing_rate": np.linespace(0.1, 1, 5),
+        "learing_rate": np.linspace(0.1, 1, 5),
         "min_samples_leaf": range(5, 15, 2),
         "max_depth": [3, 4, None],
         "max_feature": [20, 30],
     }
-    gbm_clf = RandomizedSearchCV(gbm, param_dist)
+    gbm_clf = RandomizedSearchCV(gbm, param_distributions=param_dist, n_iter=10)
 
-    f = open('parameter', 'a+')
-    f.write("Gboost")
-    f.write(time.asctime(time.localtime(time.time())))
-    f.write(gbm_clf.best_estimator_.__dict__)
-    f.write("Random Forest")
-
-    f.close()
 
     # gbm = GradientBoostingClassifier(n_estimators=100, random_state=10, subsample=0.6)
     gbm_clf.fit(x_train, y_train)
+    print(gbm_clf.best_estimator_)
     y_test = gbm_clf.predict(x_test)
     # for sample in x_test:
     #     y_test.append(gbm.predict([sample]))

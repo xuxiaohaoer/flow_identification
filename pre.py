@@ -78,6 +78,8 @@ class features(object):
         self.cipher_content = [0 for i in range(256)]  # 加密内容里各字节出现次数
         self.cipher_content_ratio = 0   # 加密内容位中0出现次数
         self.flag = False
+        self.urg = 0
+        self.psh = 0
 
 
     def tolist(self):
@@ -164,6 +166,21 @@ def cal_ratio(seq):
     tem = tem / total
     return tem
 
+
+def cal_psh(num):
+    if num % 4 == 1:
+        return True
+    else:
+        return False
+
+
+def cal_urg(num):
+    if num % 16 == 1:
+        return True
+    else:
+        return False
+
+
 def pretty_name(name_type, name_value):
     """Returns the pretty name for type name_type."""
     if name_type in PRETTY_NAMES:
@@ -194,6 +211,12 @@ def parse_ip_packet(eth, nth, timestamp):
     sys.stdout.flush()
     size = len(eth)  # 包大小
     feature.packetsize_packet_sequence.append(size)
+
+    if cal_psh(ip.data.flags):
+        feature.psh += 1
+    if cal_urg(ip.data.flags):
+        feature.urg += 1
+
     if socket.inet_ntoa(ip.src) == feature.ip_src:
         feature.time_src_sequence.append(timestamp)
         feature.packetsize_src_sequence.append(size)
@@ -236,6 +259,7 @@ def parse_tcp_packet(ip, nth, timestamp):
     Parses TCP packet.
     """
     stream = ip.data.data
+    ip.data.__flags__
     # ssl flow
     if (stream[0]) in {20, 21, 22, 23, 128, 25}:
         if (stream[0]) in {20, 21, 22}:

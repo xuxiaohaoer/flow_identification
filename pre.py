@@ -14,7 +14,9 @@ from math import pow
 import dpkt
 global contact
 contact = {}
-
+global load
+global flag_r
+flag_r = False
 need_more_parse = True  # 需要更多TLS信息
 
 
@@ -168,14 +170,16 @@ def cal_ratio(seq):
 
 
 def cal_psh(num):
-    if num % 4 == 1:
+    num = num // 8
+    if num % 2 == 1:
         return True
     else:
         return False
 
 
 def cal_urg(num):
-    if num % 16 == 1:
+    num = num // 32
+    if num % 2 == 1:
         return True
     else:
         return False
@@ -258,7 +262,13 @@ def parse_tcp_packet(ip, nth, timestamp):
     """
     Parses TCP packet.
     """
-    stream = ip.data.data
+    global flag_r
+    global load
+    if flag_r:
+        stream = load + ip.data.data
+        flag_r = False
+    else:
+        stream = ip.data.data
     # ssl flow
     if (stream[0]) in {20, 21, 22, 23, 128, 25}:
         if (stream[0]) in {20, 21, 22}:
@@ -286,6 +296,7 @@ def parse_tls_records(ip, stream, nth):
     """
     Parses TLS Records.
     """
+    global load
     try:
         records, bytes_used = dpkt.ssl.tls_multi_factory(stream)
     except dpkt.ssl.SSL3Exception as exception:
@@ -295,7 +306,9 @@ def parse_tls_records(ip, stream, nth):
     #                                       socket.inet_ntoa(ip.dst),
     #                                       ip.data.dport)
     n = 0
+    length = 0
     for record in records:
+        length += len(record)
         record_type = pretty_name('tls_record', record.type)
         if record_type == 'handshake':
             feature.ip_dst = socket.inet_ntoa(ip.src)
@@ -321,6 +334,11 @@ def parse_tls_records(ip, stream, nth):
                     # print(nth, record.data[40])
         n += 1
         sys.stdout.flush()
+    load = stream[length:]
+    if len(load):
+        global flag_r
+        flag_r = True
+
 
 
 def read_file(base_dir, filename):
@@ -373,13 +391,14 @@ def main():
     for filename in os.listdir(base_dir):
         # print(filename)
         i += 1
-        if i == 100:
+        if i == 2:
             break
         # filename = "192.168.133.165.pcap"
         # filename = "192.168.71.170.pcap"
         # filename = "192.168.0.233.pcap"
         # filenmae = "192.168.114.127.pcap"
         # filename = "192.168.193.239.pcap"
+        filename = "192.168.0.233.pcap"
         read_file(base_dir, base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         cal(feature.time_sequence)

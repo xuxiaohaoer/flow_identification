@@ -259,7 +259,6 @@ def parse_tcp_packet(ip, nth, timestamp):
     Parses TCP packet.
     """
     stream = ip.data.data
-    ip.data.__flags__
     # ssl flow
     if (stream[0]) in {20, 21, 22, 23, 128, 25}:
         if (stream[0]) in {20, 21, 22}:

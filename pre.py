@@ -2,15 +2,19 @@
 # from __future__ import print_function
 import os
 import socket
-import json
 import sys
-
-import struct
 from constants import PRETTY_NAMES
 import numpy as np
-from cipher_suite import cipher_suites
-from cipher_suite import index
+
 from math import pow
+from cal import cal
+from cal import cal_hex
+from cal import cal_matrix
+from cal import cal_urg
+from cal import cal_psh
+from cal import cal_ratio
+from cal import cal_seq
+
 import dpkt
 global contact
 contact = {}
@@ -82,6 +86,7 @@ class features(object):
         self.flag = False
         self.urg = 0
         self.psh = 0
+        self.transition_matrix = np.zeros((15, 15), dtype=int)
 
 
     def tolist(self):
@@ -100,6 +105,7 @@ class features(object):
         self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet = cal(self.packetsize_packet_sequence)
         self.cipher_support_num = cal_hex(self.cipher_support)
         self.cipher_content_ratio = round(cal_ratio(self.cipher_content), 4)
+        self.transition_matrix = cal_matrix(feature.packetsize_packet_sequence)
         # return [self.pack_num, time, self.dport, self.flow_num, ip_src, self.cipher_num, self.packetsize_size,
         #         self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
         #         self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
@@ -132,57 +138,7 @@ class feature_type:
 
 
 
-def cal(sequence):
-    Max = max(sequence)
-    Min = min(sequence)
-    seq = np.array(sequence)
-    mean = np.mean(seq)
-    std = np.std(seq)
-    return Max, Min, mean, std
 
-
-def cal_seq(seq):
-    tem = []
-    for i, key in enumerate(seq):
-        if i != 0:
-            tem.append(key-seq[i-1])
-    return tem
-
-
-def cal_hex(seq):
-    tem = []
-    for key in seq:
-        tem.append(hex(key))
-    Sum = 0
-    for key in tem:
-        if key in cipher_suites:
-            Sum += pow(2, cipher_suites[key])
-    return Sum
-
-def cal_ratio(seq):
-    tem = 0
-    total = 0
-    for i, key in enumerate(seq):
-        total += 4 * key
-        tem += key * index[i]
-    tem = tem / total
-    return tem
-
-
-def cal_psh(num):
-    num = num // 8
-    if num % 2 == 1:
-        return True
-    else:
-        return False
-
-
-def cal_urg(num):
-    num = num // 32
-    if num % 2 == 1:
-        return True
-    else:
-        return False
 
 
 def pretty_name(name_type, name_value):
@@ -258,12 +214,14 @@ def parse_ip_packet(eth, nth, timestamp):
 
 
 
+
 def parse_tcp_packet(ip, nth, timestamp):
     """
     Parses TCP packet.
     """
     global flag_r
     global load
+    # reasembled tcp segment
     if flag_r:
         stream = load + ip.data.data
         flag_r = False
@@ -297,6 +255,7 @@ def parse_tls_records(ip, stream, nth):
     Parses TLS Records.
     """
     global load
+
     try:
         records, bytes_used = dpkt.ssl.tls_multi_factory(stream)
     except dpkt.ssl.SSL3Exception as exception:
@@ -306,9 +265,10 @@ def parse_tls_records(ip, stream, nth):
     #                                       socket.inet_ntoa(ip.dst),
     #                                       ip.data.dport)
     n = 0
-    length = 0
+    len_res = 0
     for record in records:
-        length += len(record)
+        print(nth, record.type)
+        len_res += len(record)
         record_type = pretty_name('tls_record', record.type)
         if record_type == 'handshake':
             feature.ip_dst = socket.inet_ntoa(ip.src)
@@ -334,7 +294,8 @@ def parse_tls_records(ip, stream, nth):
                     # print(nth, record.data[40])
         n += 1
         sys.stdout.flush()
-    load = stream[length:]
+    # ressembled tcp segments
+    load = stream[len_res:]
     if len(load):
         global flag_r
         flag_r = True

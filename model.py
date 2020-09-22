@@ -38,11 +38,10 @@ def GradientBoosting(x_train, y_train, x_test):
     y_test = []
     gbm = GradientBoostingClassifier()
     param_dist = {
-        "n_estimators": range(50, 150, 20),
-        "learing_rate": np.linspace(0.1, 1, 5),
-        "min_samples_leaf": range(5, 15, 2),
+        "n_estimators": range(150, 300, 50),
+        "min_samples_leaf": range(2, 10, 5),
         "max_depth": [3, 4, None],
-        "max_feature": [20, 30],
+        "max_leaf_nodes": range(100, 300, 100),
     }
     gbm_clf = RandomizedSearchCV(gbm, param_distributions=param_dist, n_iter=10)
 

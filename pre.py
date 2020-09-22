@@ -267,7 +267,6 @@ def parse_tls_records(ip, stream, nth):
     n = 0
     len_res = 0
     for record in records:
-        print(nth, record.type)
         len_res += len(record)
         record_type = pretty_name('tls_record', record.type)
         if record_type == 'handshake':
@@ -278,6 +277,7 @@ def parse_tls_records(ip, stream, nth):
             if handshake_type == 2:  # server hello
                 feature.flow_num += 1
                 feature.cipher = (record.data[-2] + record.data[-3] * 256)
+
             if n == 0:
                 if handshake_type == 1:  #  sslv3 tlsv1 client hello
                     # feature.flag = True

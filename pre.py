@@ -107,24 +107,25 @@ class features(object):
         self.cipher_support_num = cal_hex(self.cipher_support)
         self.cipher_content_ratio = round(cal_ratio(self.cipher_content), 4)
         self.transition_matrix = cal_matrix(feature.packetsize_packet_sequence)
+        return [self.pack_num, time, self.flow_num, ip_src, self.cipher_num, self.packetsize_size,
+                self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
+                self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
+                self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet,
+                self.max_packetsize_src, self.min_packetsize_src, self.mean_packetsize_src, self.std_packetsize_src,
+                self.max_packetsize_dst, self.min_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
+                self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow,
+                self.cipher, self.cipher_content_ratio
+                ]
+        #  dport
         # return [self.pack_num, time, self.dport, self.flow_num, ip_src, self.cipher_num, self.packetsize_size,
         #         self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
         #         self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
-        #         self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet,
-        #         self.max_packetsize_src, self.min_packetsize_src, self.mean_packetsize_src, self.std_packetsize_src,
-        #         self.max_packetsize_dst, self.min_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
+        #         self.max_packetsize_packet,  self.mean_packetsize_packet, self.std_packetsize_packet,
+        #         self.max_packetsize_src,  self.mean_packetsize_src, self.std_packetsize_src,
+        #         self.max_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
         #         self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow,
-        #         self.cipher, self.cipher_num, self.cipher_content_ratio
+        #         self.cipher_content_ratio
         #         ]
-        return [self.pack_num, time, self.dport, self.flow_num, ip_src, self.cipher_num, self.packetsize_size,
-                self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
-                self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
-                self.max_packetsize_packet,  self.mean_packetsize_packet, self.std_packetsize_packet,
-                self.max_packetsize_src,  self.mean_packetsize_src, self.std_packetsize_src,
-                self.max_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
-                self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow,
-                self.cipher_num, self.cipher_content_ratio
-                ]
 
 
 
@@ -172,11 +173,15 @@ def parse_ip_packet(eth, nth, timestamp):
     sys.stdout.flush()
     size = len(eth)  # 包大小
     feature.packetsize_packet_sequence.append(size)
+    payload = len(ip.data.data)  # 有效负载大小
 
-    if cal_psh(ip.data.flags):
-        feature.psh += 1
-    if cal_urg(ip.data.flags):
-        feature.urg += 1
+    if isinstance(ip.data, dpkt.tcp.TCP):
+        if cal_psh(ip.data.flags):
+            feature.psh += 1
+        if cal_urg(ip.data.flags):
+            feature.urg += 1
+    if nth == 1:
+        feature.dport = int(ip.data.dport)
 
     if socket.inet_ntoa(ip.src) == feature.ip_src:
         feature.time_src_sequence.append(timestamp)
@@ -184,7 +189,7 @@ def parse_ip_packet(eth, nth, timestamp):
     else:
         feature.time_dst_sequence.append(timestamp)
         feature.packetsize_dst_sequence.append(size)
-    payload = len(ip.data.data)  # 有效负载大小
+
     flag = socket.inet_ntoa(ip.src) + ' ' + socket.inet_ntoa(ip.dst) + ' ' + str(ip.data.dport) + ' ' + str(
         ip.data.sport)
     flag_1 = socket.inet_ntoa(ip.dst) + ' ' + socket.inet_ntoa(ip.src) + ' ' + str(ip.data.sport) + ' ' + str(
@@ -235,7 +240,7 @@ def parse_tcp_packet(ip, nth, timestamp):
         if (stream[0]) == 128:  # sslv2 client hello
             # feature.flag = True
             if len(stream) > 6:
-                length = stream[6]
+                length = int(stream[6])
                 feature.cipher_num = max(length, feature.cipher_num)
                 tem = stream[7] + 11
                 i = 0
@@ -272,7 +277,7 @@ def parse_tls_records(ip, stream, nth):
         record_type = pretty_name('tls_record', record.type)
         if record_type == 'handshake':
             feature.ip_dst = socket.inet_ntoa(ip.src)
-            feature.dport = ip.data.dport
+            # feature.dport = ip.data.dport
             handshake_type = ord(record.data[:1])
             packetsize = record.data
             if handshake_type == 2:  # server hello
@@ -283,7 +288,7 @@ def parse_tls_records(ip, stream, nth):
                 data = record.data[7:]
                 tem = 0
                 a = []
-                a = parse_tls_certs(record.data, record.length)
+                a = parse_tls_certs(nth, record.data, record.length)
                 while len(data):
                     len_cer_tem = int.from_bytes(data[0:3], byteorder='big')
                     certificate = data[3:len_cer_tem+3]
@@ -292,7 +297,7 @@ def parse_tls_records(ip, stream, nth):
             if n == 0:
                 if handshake_type == 1:  #  sslv3 tlsv1 client hello
                     # feature.flag = True
-                    length = record.data[40 + record.data[38]]
+                    length = int(record.data[40 + record.data[38]])
                     feature.cipher_num = max(length, feature.cipher_num)
                     tem = 40 + record.data[38] + 1
                     i = 0
@@ -312,7 +317,7 @@ def parse_tls_records(ip, stream, nth):
         flag_r = True
 
 
-def parse_tls_certs(data, record_length):
+def parse_tls_certs(nth,data, record_length):
     """
     Parses TLS Handshake message contained in data according to their type.
     """
@@ -327,29 +332,32 @@ def parse_tls_certs(data, record_length):
     try:
         handshake = dpkt.ssl.TLSHandshake(buffers)
     except dpkt.ssl.SSL3Exception as exception:
-        print('exception while parsing TLS handshake record: {0}'.format(exception))
+        pass
+        # print('exception while parsing TLS handshake record: {0}'.format(exception))
     except dpkt.dpkt.NeedData as exception:
-        print('exception while parsing TLS handshake record: {0}'.format(exception))
+        pass
+        # print('exception while parsing TLS handshake record: {0}'.format(exception))
     try:
         ch = handshake.data
+        if handshake.type == 11:  # TLS Certificate
+            # ssl_servers_with_handshake.add(client)
+            hd_data = handshake.data
+            assert isinstance(hd_data, dpkt.ssl.TLSCertificate)
+            certs = []
+            # print(dir(hd))
+            for i in range(len(hd_data.certificates)):
+                # print("hd.certificates[i]:", hd_data.certificates[i])
+                cert = x509.Certificate.load(hd_data.certificates[i])
+                # print(cert.public_key)
+                # print(cert.self_signed)
+                sha = cert.sha256_fingerprint.replace(" ", "")
+                # print(sha)
+                certs.append(sha)
+            ans += certs
     except UnboundLocalError as exception:
-        print('exception while parsing TLS handshake record: {0}'.format(exception))
-    if handshake.type == 11:  # TLS Certificate
-        # ssl_servers_with_handshake.add(client)
-        hd_data = handshake.data
-        assert isinstance(hd_data, dpkt.ssl.TLSCertificate)
-        certs = []
-        # print(dir(hd))
-        for i in range(len(hd_data.certificates)):
-            # print("hd.certificates[i]:", hd_data.certificates[i])
-            cert = x509.Certificate.load(hd_data.certificates[i])
-            # print(cert.public_key)
-            print(cert.self_signed)
-            sha = cert.sha256_fingerprint.replace(" ", "")
-            # print(sha)
-            certs.append(sha)
+        pass
+        # print('exception while parsing TLS handshake record: {0}'.format(exception))
 
-        ans += certs
     return ans
 
 
@@ -402,15 +410,15 @@ def main():
     base_dir = "data/eta_1/train/black/"
     for filename in os.listdir(base_dir):
         i += 1
-        if i == 2:
+        if i == 1000:
             break
         # filename = "192.168.133.165.pcap"
         # filename = "192.168.71.170.pcap"
         # filename = "192.168.0.233.pcap"
         # filenmae = "192.168.114.127.pcap"
         # filename = "192.168.193.239.pcap"
-        filename = "192.168.0.233.pcap"
-        print(filename)
+        # filename = "192.168.0.233.pcap"
+        # filename = "192.168.253.95.pcap"
         read_file(base_dir, base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         cal(feature.time_sequence)

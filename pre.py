@@ -5,6 +5,7 @@ import socket
 import sys
 from constants import PRETTY_NAMES
 import numpy as np
+from asn1crypto import x509
 
 from math import pow
 from cal import cal
@@ -277,7 +278,17 @@ def parse_tls_records(ip, stream, nth):
             if handshake_type == 2:  # server hello
                 feature.flow_num += 1
                 feature.cipher = (record.data[-2] + record.data[-3] * 256)
+            if handshake_type == 11:  # certificate
+                len_cer = int.from_bytes(record.data[4:7], byteorder='big')  # 转换字节流为十进制
+                data = record.data[7:]
+                tem = 0
+                a = []
+                a = parse_tls_certs(record.data, record.length)
+                while len(data):
+                    len_cer_tem = int.from_bytes(data[0:3], byteorder='big')
+                    certificate = data[3:len_cer_tem+3]
 
+                    data = data[len_cer_tem+3:]
             if n == 0:
                 if handshake_type == 1:  #  sslv3 tlsv1 client hello
                     # feature.flag = True
@@ -300,6 +311,46 @@ def parse_tls_records(ip, stream, nth):
         global flag_r
         flag_r = True
 
+
+def parse_tls_certs(data, record_length):
+    """
+    Parses TLS Handshake message contained in data according to their type.
+    """
+    ans = []
+    handshake_type = ord(data[:1])  # 握手类型
+    if handshake_type == 4:
+        print('[#] New Session Ticket is not implemented yet')
+        return ans
+
+    buffers = data[0:]
+
+    try:
+        handshake = dpkt.ssl.TLSHandshake(buffers)
+    except dpkt.ssl.SSL3Exception as exception:
+        print('exception while parsing TLS handshake record: {0}'.format(exception))
+    except dpkt.dpkt.NeedData as exception:
+        print('exception while parsing TLS handshake record: {0}'.format(exception))
+    try:
+        ch = handshake.data
+    except UnboundLocalError as exception:
+        print('exception while parsing TLS handshake record: {0}'.format(exception))
+    if handshake.type == 11:  # TLS Certificate
+        # ssl_servers_with_handshake.add(client)
+        hd_data = handshake.data
+        assert isinstance(hd_data, dpkt.ssl.TLSCertificate)
+        certs = []
+        # print(dir(hd))
+        for i in range(len(hd_data.certificates)):
+            # print("hd.certificates[i]:", hd_data.certificates[i])
+            cert = x509.Certificate.load(hd_data.certificates[i])
+            # print(cert.public_key)
+            print(cert.self_signed)
+            sha = cert.sha256_fingerprint.replace(" ", "")
+            # print(sha)
+            certs.append(sha)
+
+        ans += certs
+    return ans
 
 
 def read_file(base_dir, filename):
@@ -350,7 +401,6 @@ def main():
     i = 0
     base_dir = "data/eta_1/train/black/"
     for filename in os.listdir(base_dir):
-        # print(filename)
         i += 1
         if i == 2:
             break
@@ -360,6 +410,7 @@ def main():
         # filenmae = "192.168.114.127.pcap"
         # filename = "192.168.193.239.pcap"
         filename = "192.168.0.233.pcap"
+        print(filename)
         read_file(base_dir, base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         cal(feature.time_sequence)

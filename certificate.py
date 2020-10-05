@@ -714,6 +714,8 @@ class Certificate(Sequence):
             A boolean - if the domain or IP is valid for the certificate
         """
 
+
+
         if not isinstance(domain_ip, str_cls):
             raise TypeError(unwrap(
                 '''

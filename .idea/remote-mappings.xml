@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteMappingsManager">
+    <list>
+      <list>
+        <remote-mappings server-id="python@sftp://xuhao@180.76.69.162:22/mnt/datasets/xuhao/tfenv/bin/python3.6">
+          <settings>
+            <list>
+              <mapping local-root="&lt;Project root&gt;" remote-root="/mnt/datasets/xuhao/project/datacon" />
+            </list>
+          </settings>
+        </remote-mappings>
+      </list>
+    </list>
+  </component>
+</project>

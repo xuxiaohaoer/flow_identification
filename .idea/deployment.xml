@@ -9,6 +9,13 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="xuhao@180.76.69.162:22 (1)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/mnt/datasets/xuhao/project/datacon" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
     <option name="myAutoUpload" value="ALWAYS" />
   </component>

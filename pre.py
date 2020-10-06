@@ -17,11 +17,10 @@ from cal import cal_ratio
 from cal import cal_seq
 
 import dpkt
+
 global contact
 contact = {}
-global load
-global flag_r
-flag_r = False
+
 need_more_parse = True  # 需要更多TLS信息
 
 
@@ -38,39 +37,39 @@ class features(object):
         self.max_time = 0  # 最大间隔时间
         self.min_time = 0  # 最小间隔时间
         self.mean_time = 0  # 平均间隔时间
-        self.std_time = 0   # 均差间隔时间
+        self.std_time = 0  # 均差间隔时间
         self.time_src_sequence = []  # 源时间间隔序列
         self.max_time_src = 0  # 最大源时间间隔
         self.min_time_src = 0  # 最小源时间间隔
         self.mean_time_src = 0  # 平均源时间间隔
-        self.std_time_src = 0   # 均差源时间间隔
+        self.std_time_src = 0  # 均差源时间间隔
         self.time_dst_sequence = []  # 目的时间间隔序列
-        self.max_time_dst = 0   # 最大目的时间间隔
-        self.min_time_dst = 0   # 最小目的时间间隔
+        self.max_time_dst = 0  # 最大目的时间间隔
+        self.min_time_dst = 0  # 最小目的时间间隔
         self.mean_time_dst = 0  # 平均目的时间间隔
-        self.std_time_dst = 0   # 均差目的时间间隔
-        self.packetsize_src_sequence = []   # 源包大小序列
-        self.max_packetsize_src = 0     # 最大源包大小
-        self.min_packetsize_src = 0     # 最小源包大小
-        self.mean_packetsize_src = 0    # 平均源包大小
-        self.std_packetsize_src = 0     # 均差源包大小
-        self.packetsize_dst_sequence = []   # 目的包大小序列
-        self.max_packetsize_dst = 0     # 最大目的包大小
-        self.min_packetsize_dst = 0     # 最小目的包大小
-        self.mean_packetsize_dst = 0    # 均值目的包大小
-        self.std_packetsize_dst = 0     # 均差目的包大小
+        self.std_time_dst = 0  # 均差目的时间间隔
+        self.packetsize_src_sequence = []  # 源包大小序列
+        self.max_packetsize_src = 0  # 最大源包大小
+        self.min_packetsize_src = 0  # 最小源包大小
+        self.mean_packetsize_src = 0  # 平均源包大小
+        self.std_packetsize_src = 0  # 均差源包大小
+        self.packetsize_dst_sequence = []  # 目的包大小序列
+        self.max_packetsize_dst = 0  # 最大目的包大小
+        self.min_packetsize_dst = 0  # 最小目的包大小
+        self.mean_packetsize_dst = 0  # 均值目的包大小
+        self.std_packetsize_dst = 0  # 均差目的包大小
         self.packetsize_flow_sequence = []  # 流大小序列
         self.max_packetsize_flow = 0  # 最大流大小
         self.min_packetsize_flow = 0  # 最小流大小
         self.mean_packetsize_flow = 0  # 平均流大小
-        self.std_packetsize_flow = 0   # 均差流大小
+        self.std_packetsize_flow = 0  # 均差流大小
         self.time_flow_sequence = []  # 流时间序列
         self.max_time_flow = 0  # 最大流时间
         self.min_time_flow = 0  # 最小流时间
         self.mean_time_flow = 0  # 平均流时间
         self.std_time_flow = 0  # 均差流时间
         self.packetsize_size = 0  # # 包大小
-        self.packetsize_packet_sequence = []    # 包大小序列
+        self.packetsize_packet_sequence = []  # 包大小序列
         self.max_packetsize_packet = 0  # 最大包大小
         self.min_packetsize_packet = 0  # 最小包大小
         self.mean_packetsize_packet = 0  # 平均包大小
@@ -78,41 +77,46 @@ class features(object):
         self.sequence = []  # 自TLS开始的有向序列
         self.num = 0  # 数据流数量
         self.cipher_num = 0  # 加密组件长度
-        self.cipher_support = []    # 加密支持组件序列
+        self.cipher_support = []  # 加密支持组件序列
         self.cipher_support_num = 0  # 加密支持组件编码
         self.cipher = 0  # 加密组件
         self.name = ''  # pacp包名称
         self.cipher_content = [0 for i in range(256)]  # 加密内容里各字节出现次数
-        self.cipher_content_ratio = 0   # 加密内容位中0出现次数
+        self.cipher_content_ratio = 0  # 加密内容位中0出现次数
         self.flag = False
         self.urg = 0
         self.psh = 0
-        self.transition_matrix = np.zeros((15, 15), dtype=int)
-
+        self.transition_matrix = np.zeros((15, 15), dtype=int)  # 马尔可夫转移矩阵
 
     def tolist(self):
         time = round(self.time)
         ip_src = int(self.ip_src.replace('.', ''))
         self.packetsize_size = round(self.packetsize_size / self.pack_num)
         self.max_time, self.min_time, self.mean_time, self.std_time = cal(self.time_sequence)
-        self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow = cal(self.packetsize_flow_sequence)
-        self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow =cal(self.time_flow_sequence)
+        self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow = cal(
+            self.packetsize_flow_sequence)
+        self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow = cal(self.time_flow_sequence)
         self.time_src_sequence = cal_seq(self.time_src_sequence)
         self.time_dst_sequence = cal_seq(self.time_dst_sequence)
         self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src = cal(self.time_src_sequence)
         self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst = cal(self.time_dst_sequence)
-        self.max_packetsize_src, self.min_packetsize_src, self.mean_packetsize_src, self.std_packetsize_src = cal(self.packetsize_src_sequence)
-        self.max_packetsize_dst, self.min_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst = cal(self.packetsize_dst_sequence)
-        self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet = cal(self.packetsize_packet_sequence)
+        self.max_packetsize_src, self.min_packetsize_src, self.mean_packetsize_src, self.std_packetsize_src = cal(
+            self.packetsize_src_sequence)
+        self.max_packetsize_dst, self.min_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst = cal(
+            self.packetsize_dst_sequence)
+        self.max_packetsize_packet, self.min_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet = cal(
+            self.packetsize_packet_sequence)
         self.cipher_support_num = cal_hex(self.cipher_support)
         self.cipher_content_ratio = round(cal_ratio(self.cipher_content), 4)
         self.transition_matrix = cal_matrix(feature.packetsize_packet_sequence)
         return [self.pack_num, time, self.flow_num, ip_src, self.cipher_num, self.packetsize_size, self.dport,
-                self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
-                self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
-                self.max_packetsize_packet,  self.mean_packetsize_packet, self.std_packetsize_packet,
+                self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src,
+                self.mean_time_src, self.std_time_src,
+                self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow,
+                self.min_time_flow, self.mean_time_flow, self.std_time_flow,
+                self.max_packetsize_packet, self.mean_packetsize_packet, self.std_packetsize_packet,
                 self.max_packetsize_src, self.mean_packetsize_src, self.std_packetsize_src,
-                self.max_packetsize_dst,  self.mean_packetsize_dst, self.std_packetsize_dst,
+                self.max_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
                 self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow,
                 self.cipher, self.cipher_content_ratio
                 ]
@@ -128,8 +132,6 @@ class features(object):
         #         ]
 
 
-
-
 class feature_type:
     def __init__(self, num, flow_size, flow_starttime, flow_endtime):
         self.num = num
@@ -137,10 +139,6 @@ class feature_type:
         self.flow_duration = 0
         self.flow_starttime = flow_starttime
         self.flow_endtime = flow_endtime
-
-
-
-
 
 
 def pretty_name(name_type, name_value):
@@ -223,51 +221,61 @@ def parse_ip_packet(eth, nth, timestamp):
         def __init__(self, seq, data):
             self.seq = seq
             self.data = data
+            self.sequence = []
 
+    # 设置flow记录流的各条记录，以解决tcp reasembeld segement
     flow_flag = socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst)
     flow_flag1 = socket.inet_ntoa(ip.dst) + '->' + socket.inet_ntoa(ip.src)
-    seq = ip.data.seq
-    ack = ip.data.ack
+    # 存在udp 没有seq和ack
+    try:
+        seq = ip.data.seq
+        ack = ip.data.ack
+    except AttributeError as exception:
+        seq = 0
+        ack = 0
     if rest_load != None:
         if len(rest_load):
             data = rest_load
         else:
             data = ip.data.data
-        print(nth, data, len(data))
+        # print(nth, data, len(data))
     else:
         data = ip.data.data
+    if len(ip.data.data):
+        if flow_flag1 in flow.keys():
+            if ack > flow[flow_flag1].seq:
+                if len(flow[flow_flag1].data) != 0:
+                    tem = flow[flow_flag1].data
+                    if tem[0] in {20, 21, 22}:
+                        parse_tls_records(ip, tem, nth)
+                    # print(nth, flow[flow_flag1].data)
+                flow[flow_flag1].data = bytes(0)
 
     if flow_flag not in flow.keys():
-        flow[flow_flag] = flow_type(seq, data)
+        if data != bytes(0):
+            if data[0] in {20, 21, 22}:
+                flow[flow_flag] = flow_type(seq, data)
+                flow[flow_flag].sequence.append(data)
     else:
         if flow[flow_flag].seq != seq:
             flow[flow_flag].seq = seq
-            flow[flow_flag].data += data
+            if data not in flow[flow_flag].sequence:
+                flow[flow_flag].data += data
+                flow[flow_flag].sequence.append(data)
         else:
             flow[flow_flag].data = data
+            flow[flow_flag].sequence.clear()
+            flow[flow_flag].sequence.append(data)
 
-    print(nth, socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst), seq, ack)
-    if nth == 18:
-        print("")
-        for key, value in flow.items():
-            print(key, value.seq, value.data)
-        print("")
-
+    # print(nth, socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst), seq, ack)
 
 
 def parse_tcp_packet(ip, nth, timestamp):
     """
     Parses TCP packet.
     """
-    global flag_r
-    global load
-    # reasembled tcp segment
     rest_load = None
-    if flag_r:
-        stream = load + ip.data.data
-        flag_r = False
-    else:
-        stream = ip.data.data
+    stream = ip.data.data
     # ssl flow
     if (stream[0]) in {20, 21, 22, 23, 128, 25}:
         if (stream[0]) in {20, 21, 22}:
@@ -282,7 +290,7 @@ def parse_tcp_packet(ip, nth, timestamp):
                 while i < length:
                     cipher = 0
                     if tem + i + 2 < len(stream):
-                        cipher = stream[tem+i+2] + stream[tem+i+1]*256 + stream[tem+i]*256*256
+                        cipher = stream[tem + i + 2] + stream[tem + i + 1] * 256 + stream[tem + i] * 256 * 256
                     if cipher not in feature.cipher_support:
                         feature.cipher_support.append(cipher)
                     i += 3
@@ -291,11 +299,12 @@ def parse_tcp_packet(ip, nth, timestamp):
             rest_load = parse_tls_records(ip, stream, nth)
     return rest_load
 
+
 def parse_tls_records(ip, stream, nth):
     """
     Parses TLS Records.
     """
-    global load
+
 
     try:
         records, bytes_used = dpkt.ssl.tls_multi_factory(stream)
@@ -311,7 +320,7 @@ def parse_tls_records(ip, stream, nth):
         len_res += len(record)
         record_type = pretty_name('tls_record', record.type)
         if record_type == 'handshake':
-            feature.ip_dst = socket.inet_ntoa(ip.src)
+            # feature.ip_dst = socket.inet_ntoa(ip.src)
             # feature.dport = ip.data.dport
             handshake_type = ord(record.data[:1])
             packetsize = record.data
@@ -326,17 +335,17 @@ def parse_tls_records(ip, stream, nth):
                 a = parse_tls_certs(nth, record.data, record.length)
                 while len(data):
                     len_cer_tem = int.from_bytes(data[0:3], byteorder='big')
-                    certificate = data[3:len_cer_tem+3]
-                    data = data[len_cer_tem+3:]
+                    certificate = data[3:len_cer_tem + 3]
+                    data = data[len_cer_tem + 3:]
             if n == 0:
-                if handshake_type == 1:  #  sslv3 tlsv1 client hello
+                if handshake_type == 1:  # sslv3 tlsv1 client hello
                     # feature.flag = True
                     length = int(record.data[40 + record.data[38]])
                     feature.cipher_num = max(length, feature.cipher_num)
                     tem = 40 + record.data[38] + 1
                     i = 0
                     while i < length:
-                        cipher = record.data[tem+i] * 256 + record.data[tem + i + 1]
+                        cipher = record.data[tem + i] * 256 + record.data[tem + i + 1]
                         if cipher not in feature.cipher_support:
                             feature.cipher_support.append(cipher)
                         i += 2
@@ -347,10 +356,8 @@ def parse_tls_records(ip, stream, nth):
     # ressembled tcp segments
 
     load = stream[len_res:]
-    if len(load):
-        global flag_r
-        flag_r = True
     return load
+
 
 def parse_tls_certs(nth, data, record_length):
     """
@@ -389,7 +396,7 @@ def parse_tls_certs(nth, data, record_length):
                 # self_signed = cert.self_signed  # 是否自签名
                 before = cert.not_valid_before
                 after = cert.not_valid_after
-                print(before, after)
+                # print(before, after)
                 sha = cert.sha256_fingerprint.replace(" ", "")
                 # print(sha)
                 certs.append(sha)
@@ -424,6 +431,13 @@ def read_file(base_dir, filename):
                 contact[key].duration = contact[key].flow_endtime - contact[key].flow_starttime
                 feature.packetsize_flow_sequence.append(contact[key].flow_size)
                 feature.time_flow_sequence.append(contact[key].duration)
+            # flow 剩余解析certificate
+            for key, value in flow.items():
+                if len(value.data) != 0:
+                    tem = value.data
+                    if tem[0] in {20, 21, 22}:
+                        parse_tls_records(tem, tem, nth)
+
             feature.pack_num = nth
             feature.time = time
             while len(feature.sequence) < 20:
@@ -448,21 +462,22 @@ def main():
     print("begin")
     dataset = []
     i = 0
-    base_dir = "data/eta_1/train/black/"
+    base_dir = "data/eta_1/train/white/"
     for filename in os.listdir(base_dir):
         i += 1
-        # print(filename.replace(".pcap", ""))
-        if i == 2:
-            break
+        print(filename.replace(".pcap", ""))
+        # if i == 2:
+        #     break
         # filename = "192.168.133.165.pcap"
         # filename = "192.168.71.170.pcap"
         # filename = "192.168.0.233.pcap"
-        # filenmae = "192.168.114.127.pcap"
+        # filename = "192.168.114.127.pcap"
         # filename = "192.168.193.239.pcap"
         # filename = "192.168.0.233.pcap"
         # filename = "192.168.253.95.pcap"
         # filename = "192.168.163.190.pcap"
-        filename = "192.168.168.108.pcap"
+        # filename = "192.168.168.108.pcap"
+        # filename =  "192.168.225.157.pcap" # udp
         read_file(base_dir, base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         dataset.append(feature.tolist())

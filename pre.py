@@ -7,7 +7,7 @@ from constants import PRETTY_NAMES
 import numpy as np
 from asn1crypto import x509
 
-from math import pow
+
 from cal import cal
 from cal import cal_hex
 from cal import cal_matrix
@@ -22,7 +22,7 @@ global contact
 contact = {}
 
 need_more_parse = True  # 需要更多TLS信息
-
+need_more_certificate = True
 
 class features(object):
     def __init__(self):
@@ -217,55 +217,56 @@ def parse_ip_packet(eth, nth, timestamp):
         if len(feature.sequence) < 20:
             feature.sequence.append(Dir)
 
-    class flow_type:
-        def __init__(self, seq, data):
-            self.seq = seq
-            self.data = data
-            self.sequence = []
+    if need_more_certificate:
+        class flow_type:
+            def __init__(self, seq, data):
+                self.seq = seq
+                self.data = data
+                self.sequence = []
 
-    # 设置flow记录流的各条记录，以解决tcp reasembeld segement
-    flow_flag = socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst)
-    flow_flag1 = socket.inet_ntoa(ip.dst) + '->' + socket.inet_ntoa(ip.src)
-    # 存在udp 没有seq和ack
-    try:
-        seq = ip.data.seq
-        ack = ip.data.ack
-    except AttributeError as exception:
-        seq = 0
-        ack = 0
-    if rest_load != None:
-        if len(rest_load):
-            data = rest_load
+        # 设置flow记录流的各条记录，以解决tcp reasembeld segement
+        flow_flag = socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst)
+        flow_flag1 = socket.inet_ntoa(ip.dst) + '->' + socket.inet_ntoa(ip.src)
+        # 存在udp 没有seq和ack
+        try:
+            seq = ip.data.seq
+            ack = ip.data.ack
+        except AttributeError as exception:
+            seq = 0
+            ack = 0
+        if rest_load != None:
+            if len(rest_load):
+                data = rest_load
+            else:
+                data = ip.data.data
+            # print(nth, data, len(data))
         else:
             data = ip.data.data
-        # print(nth, data, len(data))
-    else:
-        data = ip.data.data
-    if len(ip.data.data):
-        if flow_flag1 in flow.keys():
-            if ack > flow[flow_flag1].seq:
-                if len(flow[flow_flag1].data) != 0:
-                    tem = flow[flow_flag1].data
-                    if tem[0] in {20, 21, 22}:
-                        parse_tls_records(ip, tem, nth)
-                    # print(nth, flow[flow_flag1].data)
-                flow[flow_flag1].data = bytes(0)
+        if len(ip.data.data):
+            if flow_flag1 in flow.keys():
+                if ack > flow[flow_flag1].seq:
+                    if len(flow[flow_flag1].data) != 0:
+                        tem = flow[flow_flag1].data
+                        if tem[0] in {20, 21, 22}:
+                            parse_tls_records(ip, tem, nth)
+                        # print(nth, flow[flow_flag1].data)
+                    flow[flow_flag1].data = bytes(0)
 
-    if flow_flag not in flow.keys():
-        if data != bytes(0):
-            if data[0] in {20, 21, 22}:
-                flow[flow_flag] = flow_type(seq, data)
-                flow[flow_flag].sequence.append(data)
-    else:
-        if flow[flow_flag].seq != seq:
-            flow[flow_flag].seq = seq
-            if data not in flow[flow_flag].sequence:
-                flow[flow_flag].data += data
-                flow[flow_flag].sequence.append(data)
+        if flow_flag not in flow.keys():
+            if data != bytes(0):
+                if data[0] in {20, 21, 22}:
+                    flow[flow_flag] = flow_type(seq, data)
+                    flow[flow_flag].sequence.append(data)
         else:
-            flow[flow_flag].data = data
-            flow[flow_flag].sequence.clear()
-            flow[flow_flag].sequence.append(data)
+            if flow[flow_flag].seq != seq:
+                flow[flow_flag].seq = seq
+                if data not in flow[flow_flag].sequence:
+                    flow[flow_flag].data += data
+                    flow[flow_flag].sequence.append(data)
+            else:
+                flow[flow_flag].data = data
+                flow[flow_flag].sequence.clear()
+                flow[flow_flag].sequence.append(data)
 
     # print(nth, socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst), seq, ack)
 
@@ -432,12 +433,12 @@ def read_file(base_dir, filename):
                 feature.packetsize_flow_sequence.append(contact[key].flow_size)
                 feature.time_flow_sequence.append(contact[key].duration)
             # flow 剩余解析certificate
-            for key, value in flow.items():
-                if len(value.data) != 0:
-                    tem = value.data
-                    if tem[0] in {20, 21, 22}:
-                        parse_tls_records(tem, tem, nth)
-
+            if need_more_certificate:
+                for key, value in flow.items():
+                    if len(value.data) != 0:
+                        tem = value.data
+                        if tem[0] in {20, 21, 22}:
+                            parse_tls_records(tem, tem, nth)
             feature.pack_num = nth
             feature.time = time
             while len(feature.sequence) < 20:
@@ -462,10 +463,10 @@ def main():
     print("begin")
     dataset = []
     i = 0
-    base_dir = "data/eta_1/train/white/"
+    base_dir = "data/eta_1/train/black/"
     for filename in os.listdir(base_dir):
         i += 1
-        print(filename.replace(".pcap", ""))
+        # print(filename.replace(".pcap", ""))
         # if i == 2:
         #     break
         # filename = "192.168.133.165.pcap"
@@ -476,7 +477,7 @@ def main():
         # filename = "192.168.0.233.pcap"
         # filename = "192.168.253.95.pcap"
         # filename = "192.168.163.190.pcap"
-        # filename = "192.168.168.108.pcap"
+        # filename = "192.168.168.108.pcap" # 并行重传
         # filename =  "192.168.225.157.pcap" # udp
         read_file(base_dir, base_dir + filename)
         feature.name = filename.replace('.pcap', '')

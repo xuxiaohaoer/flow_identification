@@ -23,8 +23,8 @@ def RandomForest(x_train, y_train, x_test):
     # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
     # rnd_clf = GridSearchCV(rnd, param_dist)
 
-    # rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
-    rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=300)
+    rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
+    # rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=300)
     rnd_clf.fit(x_train, y_train)
     print(time.asctime(time.localtime(time.time())))
 

@@ -1,7 +1,11 @@
 import  numpy as np
 from cipher_suite import cipher_suites
 from cipher_suite import index
+
+
 def cal(sequence):
+    if not sequence:
+        return 0, 0, 0, 0
     Max = max(sequence)
     Min = min(sequence)
     seq = np.array(sequence)
@@ -34,12 +38,46 @@ def cal_ratio(seq):
     for i, key in enumerate(seq):
         total += 4 * key
         tem += key * index[i]
-    tem = tem / total
+    if tem != 0:
+        tem = tem / total
+    else:
+        return 0
     return tem
+
+
+def cal_fin(num):
+    if num % 2 == 1:
+        return True
+    else:
+        return False
+
+
+def cal_syn(num):
+    num = num // 2
+    if num % 2 == 1:
+        return True
+    else:
+        return False
+
+
+def cal_rst(num):
+    num = num // 4
+    if num % 2 == 1:
+        return True
+    else:
+        return False
 
 
 def cal_psh(num):
     num = num // 8
+    if num % 2 == 1:
+        return True
+    else:
+        return False
+
+
+def cal_ack(num):
+    num = num // 16
     if num % 2 == 1:
         return True
     else:
@@ -53,6 +91,23 @@ def cal_urg(num):
     else:
         return False
 
+
+def cal_ece(num):
+    num = num // 64
+    if num % 2 == 1:
+        return True
+    else:
+        return False
+
+
+def cal_cwe(num):
+    num = num // 128
+    if num % 2 == 1:
+        return True
+    else:
+        return False
+
+
 def cal_matrix(seq):
     a = np.zeros((15, 15), dtype=int)
     for i, key in enumerate(seq):
@@ -62,3 +117,4 @@ def cal_matrix(seq):
     sum = np.sum(a)
     a = a/sum
     return a
+

@@ -22,9 +22,9 @@ x_train, y_train, x_test, y_label = dataset.pre_data()
 # lightGBM
 # y_test = model.LightGBM(x_train, y_train, x_test, y_label)
 # index.cal_index_1(y_test, y_label)
-# print("RandomFroest")
-# y_test = model.RandomForest(x_train, y_train, x_test)
-# index.cal_index(y_test, y_label)
+print("RandomFroest")
+y_test = model.RandomForest(x_train, y_train, x_test)
+index.cal_index(y_test, y_label)
 
 print("GradientBoosting")
 y_test = model.GradientBoosting(x_train, y_train, x_test)

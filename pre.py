@@ -8,21 +8,18 @@ import numpy as np
 from asn1crypto import x509
 
 
-from cal import cal
-from cal import cal_hex
-from cal import cal_matrix
-from cal import cal_urg
-from cal import cal_psh
-from cal import cal_ratio
-from cal import cal_seq
+from cal import *
+
 
 import dpkt
 
 global contact
 contact = {}
 
+
 need_more_parse = True  # 需要更多TLS信息
-need_more_certificate = True
+need_more_certificate = False
+need_http = True
 
 class features(object):
     def __init__(self):
@@ -32,6 +29,14 @@ class features(object):
         self.sport = ''  # 目的端口号
         self.pack_num = 0  # 包数量
         self.flow_num = 0  # 流数目
+        self.num_src = 0  # 源包数目
+        self.num_dst = 0    # 目的包数目
+        self.num_ratio = 0  # 上下行流量比
+        self.size_src = 0   # 源总包大小
+        self.size_dst = 0   # 目的总包大小
+        self.ratio = 0  # 上下行包大小比
+        self.by_s = 0   # 每秒字节传输速度
+        self.pk_s = 0   # 每秒包传输速度
         self.time = 0  # 整体持续时间
         self.time_sequence = []  # 时间序列
         self.max_time = 0  # 最大间隔时间
@@ -68,7 +73,7 @@ class features(object):
         self.min_time_flow = 0  # 最小流时间
         self.mean_time_flow = 0  # 平均流时间
         self.std_time_flow = 0  # 均差流时间
-        self.packetsize_size = 0  # # 包大小
+        self.packetsize_size = 0  # # 平均包大小
         self.packetsize_packet_sequence = []  # 包大小序列
         self.max_packetsize_packet = 0  # 最大包大小
         self.min_packetsize_packet = 0  # 最小包大小
@@ -84,9 +89,16 @@ class features(object):
         self.cipher_content = [0 for i in range(256)]  # 加密内容里各字节出现次数
         self.cipher_content_ratio = 0  # 加密内容位中0出现次数
         self.flag = False
-        self.urg = 0
-        self.psh = 0
+        self.fin = 0  # 标志位Fin的数量
+        self.syn = 0  # 标志位Syn的数量
+        self.rst = 0  # 标志位RST的数量
+        self.ack = 0  # 标志位ACK的数量
+        self.urg = 0  # 标志位URG的数量
+        self.psh = 0  # 标志位PSH的数量
+        self.ece = 0  # 标志位ECE的数量
+        self.cwe = 0  # 标志位CWE的数量
         self.transition_matrix = np.zeros((15, 15), dtype=int)  # 马尔可夫转移矩阵
+
 
     def tolist(self):
         time = round(self.time)
@@ -109,6 +121,10 @@ class features(object):
         self.cipher_support_num = cal_hex(self.cipher_support)
         self.cipher_content_ratio = round(cal_ratio(self.cipher_content), 4)
         self.transition_matrix = cal_matrix(feature.packetsize_packet_sequence)
+        self.num_ratio = self.num_src/self.num_dst if not self.num_dst else 0
+        self.size_ratio = self.size_src/self.num_dst if not self.size_dst else 0
+        self.by_s = self.packetsize_size/self.time if not self.time else 0
+        self.pk_s = self.pack_num/ self.time if not self.time else 0
         return [self.pack_num, time, self.flow_num, ip_src, self.cipher_num, self.packetsize_size, self.dport,
                 self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src,
                 self.mean_time_src, self.std_time_src,
@@ -168,26 +184,38 @@ def parse_ip_packet(eth, nth, timestamp):
     Parses IP packet.
     """
     ip = eth.data
+    tcp_data = ip.data
     sys.stdout.flush()
     size = len(eth)  # 包大小
     feature.packetsize_packet_sequence.append(size)
     payload = len(ip.data.data)  # 有效负载大小
     rest_load = None
+    if isinstance(tcp_data,dpkt.tcp.TCP):
+        feature.fin += 1 if cal_fin(tcp_data.flags) else 0
+        feature.syn += 1 if cal_syn(tcp_data.flags) else 0
+        feature.rst += 1 if cal_rst(tcp_data.flags) else 0
+        feature.psh += 1 if cal_psh(tcp_data.flags) else 0
+        feature.ack += 1 if cal_ack(tcp_data.flags) else 0
+        feature.urg += 1 if cal_urg(tcp_data.flags) else 0
+        feature.cwe += 1 if cal_cwe(tcp_data.flags) else 0
+        feature.ece += 1 if cal_ece(tcp_data.flags) else 0
 
-    if isinstance(ip.data, dpkt.tcp.TCP):
-        if cal_psh(ip.data.flags):
-            feature.psh += 1
-        if cal_urg(ip.data.flags):
-            feature.urg += 1
+    # 提取 ip地址、端口号
     if nth == 1:
+        feature.ip_src = socket.inet_ntoa(ip.src)
+        feature.ip_dst = socket.inet_ntoa(ip.dst)
+        feature.sport = int(ip.data.sport)
         feature.dport = int(ip.data.dport)
-
     if socket.inet_ntoa(ip.src) == feature.ip_src:
         feature.time_src_sequence.append(timestamp)
         feature.packetsize_src_sequence.append(size)
+        feature.num_src += 1
+        feature.size_src += size
     else:
         feature.time_dst_sequence.append(timestamp)
         feature.packetsize_dst_sequence.append(size)
+        feature.num_dst += 1
+        feature.num_dst += size
 
     flag = socket.inet_ntoa(ip.src) + ' ' + socket.inet_ntoa(ip.dst) + ' ' + str(ip.data.dport) + ' ' + str(
         ip.data.sport)
@@ -197,10 +225,10 @@ def parse_ip_packet(eth, nth, timestamp):
         contact[flag].num += 1
         contact[flag].flow_endtime = timestamp
         contact[flag].flow_size += size
-    elif contact.__contains__(flag_1):
-        contact[flag_1].num += 1
-        contact[flag_1].flow_endtime = timestamp
-        contact[flag_1].flow_size += size
+    # elif contact.__contains__(flag_1):
+    #     contact[flag_1].num += 1
+    #     contact[flag_1].flow_endtime = timestamp
+    #     contact[flag_1].flow_size += size
     else:
         tem = feature_type(0, size, timestamp, timestamp)
         contact[flag] = tem
@@ -234,6 +262,7 @@ def parse_ip_packet(eth, nth, timestamp):
         except AttributeError as exception:
             seq = 0
             ack = 0
+
         if rest_load != None:
             if len(rest_load):
                 data = rest_load
@@ -276,8 +305,41 @@ def parse_tcp_packet(ip, nth, timestamp):
     Parses TCP packet.
     """
     rest_load = None
+    tcp_data = ip.data
     stream = ip.data.data
+
+    # http 协议
+    # if need_http:
+    #     class flow_type:
+    #         def __init__(self, seq, data):
+    #             self.seq = seq
+    #             self.data = data
+    #             self.sequence = []
+    #
+    #         # 设置flow记录流的各条记录，以解决tcp reasembeld segement
+    #
+    #     flow_flag = socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst)
+    #     data = ip.data.data
+    #     if flow_flag in flow.keys():
+    #         data = flow[flow_flag].data + ip.data.data
+    #     else:
+    #         flow[flow_flag] = flow_type(0, ip.data.data)
+    #     print(nth,data)
+    #     try:
+    #         request = dpkt.http.Response(data)
+    #         print('HTTP request: %s\n' % repr(request))
+    #     except(dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
+    #         print("1")
+    #         pass
+
+
     # ssl flow
+    #  提取标志位
+
+    # if cal_psh(tcp_data.flags):
+    #     feature.psh += 1
+    # if cal_urg(tcp_data.data.flags):
+    #     feature.urg += 1
     if (stream[0]) in {20, 21, 22, 23, 128, 25}:
         if (stream[0]) in {20, 21, 22}:
             rest_load = parse_tls_records(ip, stream, nth)
@@ -306,7 +368,6 @@ def parse_tls_records(ip, stream, nth):
     Parses TLS Records.
     """
 
-
     try:
         records, bytes_used = dpkt.ssl.tls_multi_factory(stream)
     except dpkt.ssl.SSL3Exception as exception:
@@ -316,13 +377,11 @@ def parse_tls_records(ip, stream, nth):
     #                                       socket.inet_ntoa(ip.dst),
     #                                       ip.data.dport)
     n = 0
-    len_res = 0
+
     for record in records:
-        len_res += len(record)
+        # print(nth, record.version)
         record_type = pretty_name('tls_record', record.type)
         if record_type == 'handshake':
-            # feature.ip_dst = socket.inet_ntoa(ip.src)
-            # feature.dport = ip.data.dport
             handshake_type = ord(record.data[:1])
             packetsize = record.data
             if handshake_type == 2:  # server hello
@@ -355,8 +414,7 @@ def parse_tls_records(ip, stream, nth):
         n += 1
         sys.stdout.flush()
     # ressembled tcp segments
-
-    load = stream[len_res:]
+    load = stream[bytes_used:]
     return load
 
 
@@ -398,6 +456,9 @@ def parse_tls_certs(nth, data, record_length):
                 before = cert.not_valid_before
                 after = cert.not_valid_after
                 # print(before, after)
+                # print("subject:", cert.subject)
+                # print("issuer:", cert.issuer)
+                # print("issuer_serial:", cert.issuer_serial)
                 sha = cert.sha256_fingerprint.replace(" ", "")
                 # print(sha)
                 certs.append(sha)
@@ -417,7 +478,7 @@ def read_file(base_dir, filename):
             feature = features()
             global flow
             flow = {}
-            feature.ip_src = filename.replace('.pcap', '').replace(base_dir, '')
+            # feature.ip_src = filename.replace('.pcap', '').replace(base_dir, '')
             contact.clear()
             seq = []
             for timestamp, packet in capture:
@@ -429,6 +490,8 @@ def read_file(base_dir, filename):
                 seq.append(time)
             feature.time_sequence = cal_seq(seq)
             for key in contact:
+                print(key)
+                print(key.find(feature.ip_src))
                 contact[key].duration = contact[key].flow_endtime - contact[key].flow_starttime
                 feature.packetsize_flow_sequence.append(contact[key].flow_size)
                 feature.time_flow_sequence.append(contact[key].duration)
@@ -466,9 +529,9 @@ def main():
     base_dir = "data/eta_1/train/black/"
     for filename in os.listdir(base_dir):
         i += 1
-        # print(filename.replace(".pcap", ""))
-        # if i == 2:
-        #     break
+        print(filename)
+        if i == 100:
+            break
         # filename = "192.168.133.165.pcap"
         # filename = "192.168.71.170.pcap"
         # filename = "192.168.0.233.pcap"

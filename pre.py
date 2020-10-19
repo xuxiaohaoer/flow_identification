@@ -121,10 +121,10 @@ class features(object):
         self.cipher_support_num = cal_hex(self.cipher_support)
         self.cipher_content_ratio = round(cal_ratio(self.cipher_content), 4)
         self.transition_matrix = cal_matrix(feature.packetsize_packet_sequence)
-        self.num_ratio = self.num_src/self.num_dst if not self.num_dst else 0
-        self.size_ratio = self.size_src/self.num_dst if not self.size_dst else 0
-        self.by_s = self.packetsize_size/self.time if not self.time else 0
-        self.pk_s = self.pack_num/ self.time if not self.time else 0
+        self.num_ratio = cal_div(self.num_src, self.num_dst)
+        self.size_ratio = cal_div(self.size_src, self.num_dst)
+        self.by_s = cal_div(self.packetsize_size,self.time)
+        self.pk_s = cal_div(self.pack_num, self.time)
         return [self.pack_num, time, self.flow_num, ip_src, self.cipher_num, self.packetsize_size, self.dport,
                 self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src,
                 self.mean_time_src, self.std_time_src,
@@ -468,7 +468,7 @@ def parse_tls_certs(nth, data, record_length):
     return ans
 
 
-def read_file(base_dir, filename):
+def read_file(filename):
     try:
         with open(filename, 'rb') as f:
             capture = dpkt.pcap.Reader(f)
@@ -515,7 +515,7 @@ def pre_pcap(base_dir):
     dataset = []
     i = 0
     for filename in os.listdir(base_dir):
-        read_file(base_dir, base_dir + filename)
+        read_file(base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         dataset.append(feature.tolist())
     print("data collect end")
@@ -542,7 +542,7 @@ def main():
         # filename = "192.168.163.190.pcap"
         # filename = "192.168.168.108.pcap" # 并行重传
         # filename =  "192.168.225.157.pcap" # udp
-        read_file(base_dir, base_dir + filename)
+        read_file(base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         dataset.append(feature.tolist())
     print("end")

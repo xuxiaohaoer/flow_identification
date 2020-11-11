@@ -469,7 +469,7 @@ def parse_tls_certs(nth, data, record_length):
                     feature.cipher_self_signature = 1
                 before = cert.not_valid_before
                 after = cert.not_valid_after
-                feature.cipher_certifcate_time = (after - before).days
+                feature.cipher_certifcate_time = (after - before).days  # 证书的有效天数
                 # print(before, after)
                 # print("subject:", cert.subject)
                 # print("issuer:", cert.issuer)

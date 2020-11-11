@@ -1,4 +1,4 @@
-import  numpy as np
+import numpy as np
 from cipher_suite import cipher_suites
 from cipher_suite import index
 
@@ -111,9 +111,12 @@ def cal_cwe(num):
 def cal_matrix(seq):
     a = np.zeros((15, 15), dtype=int)
     for i, key in enumerate(seq):
-
         if i < len(seq)-1:
-            a[key//150][seq[i+1]//150] += 1
+            tem1 = key // 150
+            tem2 = seq[i+1]//150
+            tem1 = tem1 if tem1 < 15 else 14
+            tem2 = tem2 if tem2 < 15 else 14
+            a[tem1][tem2] += 1
     sum = np.sum(a)
     a = a/sum
     return a

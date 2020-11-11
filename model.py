@@ -43,12 +43,12 @@ def GradientBoosting(x_train, y_train, x_test):
         "max_depth": [3, 4, None],
         "max_leaf_nodes": range(100, 300, 100),
     }
-    gbm_clf = RandomizedSearchCV(gbm, param_distributions=param_dist, n_iter=10)
+    # gbm_clf = RandomizedSearchCV(gbm, param_distributions=param_dist, n_iter=10)
 
 
-    # gbm = GradientBoostingClassifier(n_estimators=100, random_state=10, subsample=0.6)
+    gbm_clf= GradientBoostingClassifier(n_estimators=200, random_state=10, subsample=0.6)
     gbm_clf.fit(x_train, y_train)
-    print(gbm_clf.best_estimator_)
+    # print(gbm_clf.best_estimator_)
     y_test = gbm_clf.predict(x_test)
     # for sample in x_test:
     #     y_test.append(gbm.predict([sample]))

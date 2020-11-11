@@ -278,14 +278,15 @@ def parse_ip_packet(eth, nth, timestamp):
                 data = ip.data.data
         else:
             data = ip.data.data
-        if flow_flag1 in flow.keys():
-            if ack > flow[flow_flag1].seq:
-                if len(flow[flow_flag1].data) != 0:
-                    tem = flow[flow_flag1].data
-                    if tem[0] in {20, 21, 22}:
-                        parse_tls_records(ip, tem, nth)
-                    # print(nth, flow[flow_flag1].data)
-                flow[flow_flag1].data = bytes(0)
+        if len(ip.data.data):
+            if flow_flag1 in flow.keys():
+                if ack > flow[flow_flag1].seq:
+                    if len(flow[flow_flag1].data) != 0:
+                        tem = flow[flow_flag1].data
+                        if tem[0] in {20, 21, 22}:
+                            parse_tls_records(ip, tem, nth)
+                        # print(nth, flow[flow_flag1].data)
+                    flow[flow_flag1].data = bytes(0)
 
         if flow_flag not in flow.keys():
             if data != bytes(0):
@@ -464,9 +465,11 @@ def parse_tls_certs(nth, data, record_length):
                 cert = x509.Certificate.load(hd_data.certificates[i])
                 # print(cert.public_key)
                 self_signed = cert.self_signed  # 是否自签名
-                print(nth, "self_signed:", self_signed)
+                if self_signed == "maybe":
+                    feature.cipher_self_signature = 1
                 before = cert.not_valid_before
                 after = cert.not_valid_after
+                feature.cipher_certifcate_time = (after - before).days
                 # print(before, after)
                 # print("subject:", cert.subject)
                 # print("issuer:", cert.issuer)
@@ -539,13 +542,13 @@ def main():
     print("begin")
     dataset = []
     i = 0
-    # base_dir = "data/eta/datacon_eta/test/"
-    base_dir = "data/资格赛数据分析/"
+    base_dir = "data/eta/datacon_eta/test/"
+    # base_dir = "data/资格赛数据分析/"
     for filename in os.listdir(base_dir):
         i += 1
         print(filename)
-        # if i == 2:
-        #     break
+        if i == 50:
+            break
         # filename = "192.168.133.165.pcap"
         # filename = "192.168.71.170.pcap"
         # filename = "192.168.0.233.pcap"

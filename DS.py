@@ -1,5 +1,5 @@
 from sklearn.datasets import load_iris
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, train_test_split
 from sklearn.preprocessing import OneHotEncoder
 # import tensorflow as tf
 import pre
@@ -34,10 +34,16 @@ for i, key in enumerate(x_train):
     for j, num in enumerate(key):
         x_train[i][j] = float(num)
 minMax = MinMaxScaler()
-x_test = x_test + x_train
-x_test = minMax.fit_transform(x_test)
-x_train = x_test[4000:]
-x_test = x_test[:4000]
+X = x_test + x_train
+Y = y_label + y_train
+X = minMax.fit_transform(X)
+# x_train = X[4000:]
+# x_test = X[:4000]
+# X = x_train
+# Y = y_train
+# X = minMax.fit_transform(X)
+x_train, x_test, y_train, y_label = train_test_split(X, Y, test_size=0.4, random_state=42)
+
 # lightGBM
 # y_test = model.LightGBM(x_train, y_train, x_test, y_label)
 # index.cal_index_1(y_test, y_label)

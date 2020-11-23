@@ -6,6 +6,9 @@ import sys
 from constants import PRETTY_NAMES
 import numpy as np
 from asn1crypto import x509
+import OpenSSL
+
+
 
 
 from cal import *
@@ -89,6 +92,8 @@ class features(object):
         self.cipher_content_ratio = 0  # 加密内容位中0出现次数
         self.cipher_self_signature = 0  # 是否自签名，是1，否为0
         self.cipher_certifcate_time = []  # 证书有效时间
+        self.cipher_subject = []
+        self.cipher_issue = []
         self.flag = False
         self.fin = 0  # 标志位Fin的数量
         self.syn = 0  # 标志位Syn的数量
@@ -128,6 +133,7 @@ class features(object):
         self.size_ratio = cal_div(self.size_src, self.num_dst)
         self.by_s = cal_div(self.packetsize_size, self.time)
         self.pk_s = cal_div(self.pack_num, self.time)
+        return [self.cipher_subject, self.cipher_issue]
         return [self.pack_num, time, self.flow_num, ip_src, self.cipher_num, self.packetsize_size, self.dport,
                 self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src,
                 self.mean_time_src, self.std_time_src,
@@ -460,23 +466,37 @@ def parse_tls_certs(nth, data, record_length):
             assert isinstance(hd_data, dpkt.ssl.TLSCertificate)
             certs = []
             # print(dir(hd))
-            for i in range(len(hd_data.certificates)):
-                # print("hd.certificates[i]:", hd_data.certificates[i])
-                cert = x509.Certificate.load(hd_data.certificates[i])
-                # print(cert.public_key)
-                self_signed = cert.self_signed  # 是否自签名
-                if self_signed == "maybe":
-                    feature.cipher_self_signature = 1
-                before = cert.not_valid_before
-                after = cert.not_valid_after
-                feature.cipher_certifcate_time = (after - before).days  # 证书的有效天数
-                # print(before, after)
-                # print("subject:", cert.subject)
-                # print("issuer:", cert.issuer)
-                # print("issuer_serial:", cert.issuer_serial)
-                sha = cert.sha256_fingerprint.replace(" ", "")
-                # print(sha)
-                certs.append(sha)
+            cert_1 = hd_data.certificates[0]
+            cert_1 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_ASN1, cert_1)
+            feature.cipher_issue.append(cert_1.get_subject().CN)
+            feature.cipher_subject.append(cert_1.get_issuer().CN)
+
+            feature.flag = False
+            # for i in range(len(hd_data.certificates)):
+            #     # print("hd.certificates[i]:", hd_data.certificates[i])
+            #     cert = x509.Certificate.load(hd_data.certificates[i])
+            #     cert_1 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_ASN1, hd_data.certificates[i])
+            #     print("issue CN:", cert_1.get_issuer().CN)
+            #     print("subject CN:", cert_1.get_subject().CN)
+            #     print("version:", cert_1.get_version())
+            #     print("cert_alo:", cert_1.get_signature_algorithm())
+            #     print("self_signed:", cert.self_signed)
+            #     # print(cert.public_key)
+            #     self_signed = cert.self_signed  # 是否自签名
+            #     if self_signed == "maybe":
+            #         feature.cipher_self_signature = 1
+            #     before = cert.not_valid_before
+            #     after = cert.not_valid_after
+            #     feature.cipher_certifcate_time = (after - before).days  # 证书的有效天数
+            #     # print("durations:", feature.cipher_certifcate_time)
+            #     # print("self_signed:", self_signed)
+            #     # print("subject:", cert.subject)
+            #     # print("issuer:", cert.issuer)
+            #     # print("issuer_serial:", cert.issuer_serial)
+            #     sha = cert.sha256_fingerprint.replace(" ", "")
+            #     # print(sha)
+            #     certs.append(sha)
+            # print("\n")
             ans += certs
         # print('exception while parsing TLS handshake record: {0}'.format(exception))
 
@@ -491,13 +511,15 @@ def read_file(filename):
             time = 0
             global feature
             feature = features()
+            feature.flag = True
             global flow
             flow = {}
             # feature.ip_src = filename.replace('.pcap', '').replace(base_dir, '')
             contact.clear()
             seq = []
             for timestamp, packet in capture:
-                analyze_packet(timestamp, packet, nth)
+                if feature.flag:
+                    analyze_packet(timestamp, packet, nth)
                 if nth == 1:
                     flag = timestamp
                 time = timestamp - flag
@@ -530,7 +552,11 @@ def pre_pcap(base_dir, type):
     dataset = []
     i = 0
     for filename in os.listdir(base_dir):
+        i += 1
+        if i % 100 == 0:
+            print(i)
         read_file(base_dir + filename)
+        need_more_certificate = True
         feature.name = filename.replace('.pcap', '')
         feature.label = type
         dataset.append(feature.tolist())
@@ -542,7 +568,8 @@ def main():
     print("begin")
     dataset = []
     i = 0
-    base_dir = "data/eta/datacon_eta/test/"
+    # base_dir = "data/eta/datacon_eta/test/"
+    base_dir = "data/eta/datacon_eta/train/white/"
     # base_dir = "data/资格赛数据分析/"
     for filename in os.listdir(base_dir):
         i += 1

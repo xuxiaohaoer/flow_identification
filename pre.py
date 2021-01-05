@@ -5,10 +5,8 @@ import socket
 import sys
 from constants import PRETTY_NAMES
 import numpy as np
-from asn1crypto import x509
+# from asn1crypto import x509
 import OpenSSL
-
-
 
 
 from cal import *
@@ -24,7 +22,8 @@ need_more_parse = True  # 需要更多TLS信息
 need_more_certificate = True
 need_http = True
 
-class features(object):
+
+class FeatureType(object):
     def __init__(self):
         self.ip_src = ''  # 目的ip地址
         self.ip_dst = ''  # 源ip地址
@@ -92,9 +91,9 @@ class features(object):
         self.cipher_content_ratio = 0  # 加密内容位中0出现次数
         self.cipher_self_signature = 0  # 是否自签名，是1，否为0
         self.cipher_certifcate_time = []  # 证书有效时间
-        self.cipher_subject = []
-        self.cipher_issue = []
-        self.flag = False
+        self.cipher_subject = []  # 证书中subject
+        self.cipher_issue = []  # 证书中issue
+        self.flag = False  # 只取第一个certificate
         self.fin = 0  # 标志位Fin的数量
         self.syn = 0  # 标志位Syn的数量
         self.rst = 0  # 标志位RST的数量
@@ -107,8 +106,8 @@ class features(object):
         self.label = ''  # 若有，则为具体攻击类型
         self.name = ''  # pacp包名称
 
-
     def tolist(self):
+        """change to list that is the model input"""
         time = round(self.time)
         ip_src = int(self.ip_src.replace('.', ''))
         self.packetsize_size = round(self.packetsize_size / self.pack_num)
@@ -133,7 +132,7 @@ class features(object):
         self.size_ratio = cal_div(self.size_src, self.num_dst)
         self.by_s = cal_div(self.packetsize_size, self.time)
         self.pk_s = cal_div(self.pack_num, self.time)
-        return [self.cipher_subject, self.cipher_issue]
+        # return [self.cipher_subject, self.cipher_issue]
         return [self.pack_num, time, self.flow_num, ip_src, self.cipher_num, self.packetsize_size, self.dport,
                 self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src,
                 self.mean_time_src, self.std_time_src,
@@ -162,7 +161,7 @@ class features(object):
         #         ]
 
 
-class feature_type:
+class FlowRecord:
     def __init__(self, num, flow_size, flow_starttime, flow_endtime):
         self.num = num
         self.flow_size = flow_size
@@ -204,7 +203,7 @@ def parse_ip_packet(eth, nth, timestamp):
     feature.packetsize_packet_sequence.append(size)
     payload = len(ip.data.data)  # 有效负载大小
     rest_load = None
-    if isinstance(tcp_data,dpkt.tcp.TCP):
+    if isinstance(tcp_data, dpkt.tcp.TCP):
         feature.fin += 1 if cal_fin(tcp_data.flags) else 0
         feature.syn += 1 if cal_syn(tcp_data.flags) else 0
         feature.rst += 1 if cal_rst(tcp_data.flags) else 0
@@ -244,7 +243,7 @@ def parse_ip_packet(eth, nth, timestamp):
     #     contact[flag_1].flow_endtime = timestamp
     #     contact[flag_1].flow_size += size
     else:
-        tem = feature_type(0, size, timestamp, timestamp)
+        tem = FlowRecord(0, size, timestamp, timestamp)
         contact[flag] = tem
     feature.packetsize_size += size
     if isinstance(ip.data, dpkt.tcp.TCP) and payload:
@@ -252,21 +251,21 @@ def parse_ip_packet(eth, nth, timestamp):
         for key in ip.data.data:
             feature.cipher_content[key] += 1
         if socket.inet_ntoa(ip.src) == feature.ip_dst:
-            dir = 1
+            direction = 1
         else:
-            dir = -1
-        Dir = dir * payload
+            direction = -1
+        dirpath = direction * payload
         if len(feature.sequence) < 20:
-            feature.sequence.append(Dir)
+            feature.sequence.append(dirpath)
 
     if need_more_certificate:
-        class flow_type:
+        class FlowFlag:
             def __init__(self, seq, data):
                 self.seq = seq
                 self.data = data
                 self.sequence = []
 
-        # 设置flow记录流的各条记录，以解决tcp reasembeld segement
+        # 设置flow记录流的各条记录，以解决tcp resseambeld segment
         flow_flag = socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst)
         flow_flag1 = socket.inet_ntoa(ip.dst) + '->' + socket.inet_ntoa(ip.src)
         # 存在udp 没有seq和ack
@@ -276,7 +275,6 @@ def parse_ip_packet(eth, nth, timestamp):
         except AttributeError as exception:
             seq = 0
             ack = 0
-
         if rest_load != None:
             if len(rest_load):
                 data = rest_load
@@ -290,6 +288,8 @@ def parse_ip_packet(eth, nth, timestamp):
                     if len(flow[flow_flag1].data) != 0:
                         tem = flow[flow_flag1].data
                         if tem[0] in {20, 21, 22}:
+                            print(nth, tem)
+                            print("***")
                             parse_tls_records(ip, tem, nth)
                         # print(nth, flow[flow_flag1].data)
                     flow[flow_flag1].data = bytes(0)
@@ -297,7 +297,7 @@ def parse_ip_packet(eth, nth, timestamp):
         if flow_flag not in flow.keys():
             if data != bytes(0):
                 if data[0] in {20, 21, 22}:
-                    flow[flow_flag] = flow_type(seq, data)
+                    flow[flow_flag] = FlowFlag(seq, data)
                     flow[flow_flag].sequence.append(data)
         else:
             if flow[flow_flag].seq != seq:
@@ -320,29 +320,7 @@ def parse_tcp_packet(ip, nth, timestamp):
     rest_load = None
     tcp_data = ip.data
     stream = ip.data.data
-    # http 协议
-    # if need_http:
-    #     class flow_type:
-    #         def __init__(self, seq, data):
-    #             self.seq = seq
-    #             self.data = data
-    #             self.sequence = []
-    #
-    #         # 设置flow记录流的各条记录，以解决tcp reasembeld segement
-    #
-    #     flow_flag = socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst)
-    #     data = ip.data.data
-    #     if flow_flag in flow.keys():
-    #         data = flow[flow_flag].data + ip.data.data
-    #     else:
-    #         flow[flow_flag] = flow_type(0, ip.data.data)
-    #     print(nth,data)
-    #     try:
-    #         request = dpkt.http.Response(data)
-    #         print('HTTP request: %s\n' % repr(request))
-    #     except(dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
-    #         print("1")
-    #         pass
+
 
 
     # ssl flow
@@ -354,6 +332,7 @@ def parse_tcp_packet(ip, nth, timestamp):
     #     feature.urg += 1
     if (stream[0]) in {20, 21, 22, 23, 128, 25}:
         if (stream[0]) in {20, 21, 22}:
+            print("---")
             rest_load = parse_tls_records(ip, stream, nth)
         if (stream[0]) == 128:  # sslv2 client hello
             # feature.flag = True
@@ -378,15 +357,39 @@ def parse_tcp_packet(ip, nth, timestamp):
             rest_load = parse_tls_records(ip, stream, nth)
     return rest_load
 
+def multiple_handshake(nth,buf):
+    i, n = 0, len(buf)
+    msgs = []
+    while i + 5 <= n:
+        v = buf[i + 1:i + 3]
+        if v in dpkt.ssl.SSL3_VERSION_BYTES:
+            head = buf[i:i+5]
+            j = i+5
+            record_len = int.from_bytes(buf[j:j+3],byteorder='big',signed=False)
+            tem = head + buf[j:j+record_len+6]
+            try:
+                msg = dpkt.ssl.TLSRecord(tem)
+                print(nth, "***{}***".format(msg))
+                msgs.append(msg)
+            except dpkt.NeedData:
+                break
+        else:
+            raise dpkt.ssl.SSL3Exception('Bad TLS version in buf: %r' % buf[i:i + 5])
+        i += len(msg)
+    return msgs, i
+
 
 def parse_tls_records(ip, stream, nth):
     """
     Parses TLS Records.
     """
+    print(nth)
     try:
         records, bytes_used = dpkt.ssl.tls_multi_factory(stream)
     except dpkt.ssl.SSL3Exception as exception:
-        return
+        pass
+    except:
+        records, bytes_used = multiple_handshake(nth, stream)
     # connection = '{0}:{1}-{2}:{3}'.format(socket.inet_ntoa(ip.src),
     #                                       ip.data.sport,
     #                                       socket.inet_ntoa(ip.dst),
@@ -395,6 +398,7 @@ def parse_tls_records(ip, stream, nth):
     for record in records:
         # print(nth, record.version)
         record_type = pretty_name('tls_record', record.type)
+        print(nth, record.type)
         if record_type == 'handshake':
             handshake_type = ord(record.data[:1])
             packetsize = record.data
@@ -466,10 +470,11 @@ def parse_tls_certs(nth, data, record_length):
             assert isinstance(hd_data, dpkt.ssl.TLSCertificate)
             certs = []
             # print(dir(hd))
-            cert_1 = hd_data.certificates[0]
-            cert_1 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_ASN1, cert_1)
-            feature.cipher_issue.append(cert_1.get_subject().CN)
-            feature.cipher_subject.append(cert_1.get_issuer().CN)
+            if len(hd_data.certificates) != 0:
+                cert_1 = hd_data.certificates[0]
+                cert_1 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_ASN1, cert_1)
+                feature.cipher_issue.append(cert_1.get_subject().CN)
+                feature.cipher_subject.append(cert_1.get_issuer().CN)
 
             feature.flag = False
             # for i in range(len(hd_data.certificates)):
@@ -510,7 +515,7 @@ def read_file(filename):
             nth = 1
             time = 0
             global feature
-            feature = features()
+            feature = FeatureType()
             feature.flag = True
             global flow
             flow = {}
@@ -543,6 +548,7 @@ def read_file(filename):
             feature.time = time
             while len(feature.sequence) < 20:
                 feature.sequence.append(0)
+            print(feature.cipher_subject)
             f.close()
     except IOError:
         print('could not parse {0}'.format(filename))
@@ -569,12 +575,12 @@ def main():
     dataset = []
     i = 0
     # base_dir = "data/eta/datacon_eta/test/"
-    base_dir = "data/eta/datacon_eta/train/white/"
-    # base_dir = "data/资格赛数据分析/"
+    # base_dir = "data/eta/datacon_eta/train/white/"
+    base_dir = "data/资格赛数据分析/"
     for filename in os.listdir(base_dir):
         i += 1
         print(filename)
-        if i == 50:
+        if i == 2:
             break
         # filename = "192.168.133.165.pcap"
         # filename = "192.168.71.170.pcap"
@@ -586,7 +592,7 @@ def main():
         # filename = "192.168.163.190.pcap"
         # filename = "192.168.168.108.pcap" # 并行重传
         # filename =  "192.168.225.157.pcap" # udp
-
+        filename = "192.168.210.239.pcap"
         read_file(base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         dataset.append(feature.tolist())

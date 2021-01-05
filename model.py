@@ -10,7 +10,7 @@ from sklearn.model_selection import RandomizedSearchCV
 import time
 
 def RandomForest(x_train, y_train, x_test):
-    y_test = []
+    y_pred = []
     rnd = RandomForestClassifier()
     param_dist = {
         "n_estimators": range(200, 300, 25),
@@ -28,14 +28,14 @@ def RandomForest(x_train, y_train, x_test):
     rnd_clf.fit(x_train, y_train)
     print(time.asctime(time.localtime(time.time())))
 
-    y_test = rnd_clf.predict(x_test)
+    y_pred = rnd_clf.predict(x_test)
     # for sample in x_test:
-    #     y_test.append(rnd_clf.predict([sample]))
-    return y_test
+    #     y_pred.append(rnd_clf.predict([sample]))
+    return y_pred
 
 
 def GradientBoosting(x_train, y_train, x_test):
-    y_test = []
+    y_pred = []
     gbm = GradientBoostingClassifier()
     param_dist = {
         "n_estimators": range(150, 300, 50),
@@ -49,34 +49,42 @@ def GradientBoosting(x_train, y_train, x_test):
     gbm_clf= GradientBoostingClassifier(n_estimators=200, random_state=10, subsample=0.6)
     gbm_clf.fit(x_train, y_train)
     # print(gbm_clf.best_estimator_)
-    y_test = gbm_clf.predict(x_test)
+    y_pred = gbm_clf.predict(x_test)
     # for sample in x_test:
-    #     y_test.append(gbm.predict([sample]))
-    return y_test
+    #     y_pred.append(gbm.predict([sample]))
+    return y_pred
 
 
 def Voting(x_train, y_train, x_test):
-    y_test = []
+    y_pred = []
     rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1)
     gbm = GradientBoostingClassifier(n_estimators=100, random_state=10, subsample=0.6)
     voting_clf = VotingClassifier(estimators=[('lr', rnd_clf), ('rf', gbm)], voting='soft')
     voting_clf.fit(x_train, y_train)
-    y_test = voting_clf.predict(x_test)
+    y_pred = voting_clf.predict(x_test)
     # for sample in x_test:
-    #     y_test.append(voting_clf.predict([sample]))
-    return y_test
+    #     y_pred.append(voting_clf.predict([sample]))
+    return y_pred
+
+
+def cluster(x_train, y_train, x_test):
+    from sklearn.cluster import KMeans
+    kmeans_model = KMeans(n_clusters=10, random_state=1).fit(x_train)
+    y_pred = kmeans_model.predict(x_test)
+    return y_pred
+
 
 
 def Xgboost(x_train, y_train, x_test):
-    y_test = []
+    y_pred = []
     xgb = XGBClassifier()
     x_train = np.array(x_train)
     y_train = np.array(y_train)
     xgb.fit(x_train, y_train)
-    y_test = (xgb.predict(x_test))
+    y_pred = (xgb.predict(x_test))
     # for sample in x_test:
-    #     y_test.append(xgb.predict([sample]))
-    return y_test
+    #     y_pred.append(xgb.predict([sample]))
+    return y_pred
 
 
 def LightGBM(x_train, y_train, x_test, y_label):
@@ -95,7 +103,7 @@ def LightGBM(x_train, y_train, x_test, y_label):
     x_test = np.array(x_test)
     y_label = np.array(y_label)
 
-    y_test = []
+    y_pred = []
     lgb_train = lgb.Dataset(x_train, y_train)  # 将数据保存到LightGBM二进制文件将使加载更快
     lgb_eval = lgb.Dataset(x_test, y_label, reference=lgb_train)
     params = {'num_leaves': 60,  # 结果对最终效果影响较大，越大值越好，太大会出现过拟合
@@ -118,10 +126,10 @@ def LightGBM(x_train, y_train, x_test, y_label):
               # 'device': 'gpu' ##如果安装的事gpu版本的lightgbm,可以加快运算
               }
     gbm = lgb.train(params, lgb_train, num_boost_round=20, valid_sets=lgb_eval, early_stopping_rounds=5)
-    y_test = gbm.predict(x_test)
+    y_pred = gbm.predict(x_test)
     Y_test = []
-    for i in range(len(y_test)):
-        if y_test[i] < 0.5:
+    for i in range(len(y_pred)):
+        if y_pred[i] < 0.5:
             Y_test.append(0)
         else:
             Y_test.append(1)

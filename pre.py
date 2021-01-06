@@ -132,6 +132,7 @@ class FeatureType(object):
         self.size_ratio = cal_div(self.size_src, self.num_dst)
         self.by_s = cal_div(self.packetsize_size, self.time)
         self.pk_s = cal_div(self.pack_num, self.time)
+        print(self.cipher_subject)
         return [self.name, self.cipher_subject, self.cipher_issue, self.label]
         # return [self.pack_num, time, self.flow_num, ip_src, self.cipher_num, self.packetsize_size, self.dport,
         #         self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src,
@@ -277,6 +278,7 @@ def parse_ip_packet(eth, nth, timestamp):
             seq = 0
             ack = 0
         data = ip.data.data
+        data_flag = data
         try:
             if data[0] in {20,21,22}:
                 data = parse_tls_records(ip, data, nth)
@@ -295,10 +297,10 @@ def parse_ip_packet(eth, nth, timestamp):
         #     print(flow[flow_flag1].seq)
         # print("ack:", ack)
         # print("seq:", seq)
-        # if nth ==13:
-        #     print(len(flow["203.208.40.47->192.168.93.203"].data))
-        #     print(flow["203.208.40.47->192.168.93.203"].nth_seq)
-        #     for key in flow["203.208.40.47->192.168.93.203"].sequence:
+        # if nth ==113:
+        #     print(len(flow["203.208.39.223->192.168.147.175"].data))
+        #     print(flow["203.208.39.223->192.168.147.175"].nth_seq)
+        #     for key in flow["203.208.39.223->192.168.147.175"].sequence:
         #         print("###key:", key)
         #         print(len(key))
         if flow_flag1 in flow.keys():
@@ -308,15 +310,15 @@ def parse_ip_packet(eth, nth, timestamp):
                     if tem[0] in {20, 21, 22}:
                         # print(nth, len(tem), tem)
                         rest_load = parse_tls_records(ip, tem, nth)
-
                     # print(nth, flow[flow_flag1].data)
                 try:
-                    if rest_load != None:
+                    if rest_load != None and not len(data_flag):
                         flow[flow_flag1].data = rest_load
                         if rest_load == bytes(0):
                             flow[flow_flag1].sequence.clear()
                             flow[flow_flag1].nth_seq.clear()
                         else:
+                            # 中间插入一条ack较大值
                             flow[flow_flag1].sequence = [rest_load]
 
                     else:
@@ -324,6 +326,8 @@ def parse_ip_packet(eth, nth, timestamp):
                         flow[flow_flag1].sequence.clear()
                         flow[flow_flag1].nth_seq.clear()
                 except:
+                    if nth ==35:
+                        print("1###")
                     flow[flow_flag1].data = bytes(0)
                     flow[flow_flag1].sequence.clear()
                     flow[flow_flag1].nth_seq.clear()
@@ -335,7 +339,7 @@ def parse_ip_packet(eth, nth, timestamp):
                         flow[flow_flag].sequence.append(data)
                         flow[flow_flag].nth_seq.append(nth)
             else:
-                if flow[flow_flag].seq != seq:
+                if flow[flow_flag].seq < seq:
                     flow[flow_flag].seq = seq
                     if data not in flow[flow_flag].sequence:
                         if data not in flow[flow_flag].data:
@@ -344,12 +348,13 @@ def parse_ip_packet(eth, nth, timestamp):
                             flow[flow_flag].sequence.append(data)
                             flow[flow_flag].nth_seq.append(nth)
                 else:
-                    flow[flow_flag].data = data
-                    # 重复数据
-                    flow[flow_flag].sequence.clear()
-                    flow[flow_flag].nth_seq.clear()
-                    flow[flow_flag].sequence.append(data)
-                    flow[flow_flag].nth_seq.append(nth)
+                    pass
+                    # flow[flow_flag].data = data
+                    # # 重复数据
+                    # flow[flow_flag].sequence.clear()
+                    # flow[flow_flag].nth_seq.clear()
+                    # flow[flow_flag].sequence.append(data)
+                    # flow[flow_flag].nth_seq.append(nth)
 
     # print(nth, socket.inet_ntoa(ip.src) + '->' + socket.inet_ntoa(ip.dst), seq, ack)
 
@@ -682,7 +687,7 @@ def main():
         # filename = "192.168.163.190.pcap"
         # filename = "192.168.168.108.pcap" # 并行重传
         # filename =  "192.168.225.157.pcap" # udp
-        filename = "192.168.127.103.pcap"
+        filename = "192.168.147.175.pcap"
 
         read_file(base_dir + filename)
         feature.name = filename.replace('.pcap', '')

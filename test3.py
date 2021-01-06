@@ -2,7 +2,7 @@
 import scapy.all as scapy
 import scapy.data
 
-import os
+import
 def main():
     base_dir = "data/资格赛数据分析/"
     # for file in os.listdir(base_dir):

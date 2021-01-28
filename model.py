@@ -24,10 +24,10 @@ def RandomForest(x_train, y_train, x_test):
     # rnd_clf = GridSearchCV(rnd, param_dist)
 
     rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
-    # rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=300)
-    rnd_clf.fit(x_train, y_train)
-    print(time.asctime(time.localtime(time.time())))
+    # rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=10)
 
+    rnd_clf.fit(x_train, y_train)
+    # print(rnd_clf.best_estimator_)
     y_pred = rnd_clf.predict(x_test)
     # for sample in x_test:
     #     y_pred.append(rnd_clf.predict([sample]))
@@ -57,9 +57,9 @@ def GradientBoosting(x_train, y_train, x_test):
 
 def Voting(x_train, y_train, x_test):
     y_pred = []
-    rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1)
-    gbm = GradientBoostingClassifier(n_estimators=100, random_state=10, subsample=0.6)
-    voting_clf = VotingClassifier(estimators=[('lr', rnd_clf), ('rf', gbm)], voting='soft')
+    rnd = RandomForestClassifier(n_estimators=225, max_leaf_nodes=220, criterion='entropy')
+    gbm = GradientBoostingClassifier(n_estimators=250, max_leaf_nodes=100, min_samples_leaf=2, max_depth=4)
+    voting_clf = VotingClassifier(estimators=[('lr', rnd), ('rf', gbm)], voting='soft')
     voting_clf.fit(x_train, y_train)
     y_pred = voting_clf.predict(x_test)
     # for sample in x_test:
@@ -67,12 +67,25 @@ def Voting(x_train, y_train, x_test):
     return y_pred
 
 
-def cluster(x_train, y_train, x_test):
+def KmeansCluster(X):
     from sklearn.cluster import KMeans
-    kmeans_model = KMeans(n_clusters=10, random_state=1).fit(x_train)
-    y_pred = kmeans_model.predict(x_test)
+    kmeans = KMeans()
+    param_dist = {
+        "n_clusters":range(10,50,10),
+    }
+    kmeans_model = RandomizedSearchCV(kmeans, param_dist, n_iter=3)
+    kmeans_model.fit(X)
+    print(kmeans_model.best_estimator_)
+    y_pred = kmeans_model.predict(X)
     return y_pred
 
+
+def DbscanCluster(x_train, x_test):
+    from sklearn.cluster import DBSCAN
+    dbscan =DBSCAN(eps=0.3, min_samples=10)
+    dbscan.fit(x_train)
+    y_pred = dbscan.fit_predict(x_test)
+    return y_pred
 
 
 def Xgboost(x_train, y_train, x_test):

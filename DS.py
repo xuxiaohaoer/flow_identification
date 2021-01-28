@@ -2,67 +2,82 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import KFold, train_test_split
 import model
 import index
-from data_read import data_read
+# from data_read import data_read
 from sklearn.preprocessing import MinMaxScaler
-
+from pre_data import pre_data
 
 def main():
-    x_train = []
-    y_train = []
-    x_test = []
-    # 自测
-    y_pred = []
-    y_label = []
-    print("begin system")
-    x_1, x_2 = data_read()
-    print(len(x_1), len(x_2))
-    # 导入测试集和训练集
-    for key in x_1:
-        x_train.append(key[:-18])
-        y_train.append(key[-2])
-    for key in x_2:
-        x_test.append(key[:-18])
-        y_label.append(key[-2])
-    for i, key in enumerate(x_test):
-        for j, num in enumerate(key):
-            x_test[i][j] = float(num)
-    for i, key in enumerate(x_train):
-        for j, num in enumerate(key):
-            x_train[i][j] = float(num)
 
-    minMax = MinMaxScaler()
-    X = x_test + x_train
-    Y = y_label + y_train
-    X = minMax.fit_transform(X)
-    # x_train = X[4000:]
-    # x_test = X[:4000]
-    # X = x_train
-    # Y = y_train
-    # X = minMax.fit_transform(X)
-    x_train, x_test, y_train, y_label = train_test_split(X, Y, test_size=0.4, random_state=42)
+    print("begin system")
+    # 导入测试集和训练集
+    features = ['flow', 'subject', 'issue', 'matrix']
+    features = ['subject']
+    Y = []
+    for feature in features:
+        x_train, x_test, y_train, y_label = pre_data(feature)
+        grad = 0
+        y_tem = []
 
     # lightGBM
+    # print("light GBM")
     # y_pred = model.LightGBM(x_train, y_train, x_test, y_label)
-    # index.cal_index_1(y_pred, y_label)'
-    print("kmeans")
-    y_pred = model.cluster(x_train, y_train, x_test)
-    from sklearn import metrics
-    print("grade:{}".format(metrics.adjusted_rand_score(y_label, y_pred)))
-    print(metrics.adjusted_mutual_info_score(y_label, y_pred))
-    print(metrics.fowlkes_mallows_score(y_label, y_pred))
-    print("v-measure:{}".format(metrics.v_measure_score(y_label, y_pred)))
-    # print("RandomFroest")
-    # y_pred = model.RandomForest(x_train, y_train, x_test)
-    # index.cal_index(y_pred, y_label)
+    # index.cal_index_1(y_pred, y_label)
+    # print("kmeans")
     #
-    # print("GradientBoosting")
-    # y_pred = model.GradientBoosting(x_train, y_train, x_test)
-    # index.cal_index(y_pred, y_label)
+    # y_pred = model.KmeansCluster(X)
+    # from sklearn import metrics
+    # index.Cal_ClusterIndex(Y, y_pred)
+    # print("DbsanCluster")
+    # y_pred = model.DbscanCluster(x_train, x_test)
+    # index.Cal_ClusterIndex(y_label, y_pred)
+    #     print("RandomFroest")
+    #     y_pred = model.RandomForest(x_train, y_train, x_test)
+    #     grad_tem = index.cal_index_sk(y_pred, y_label)
+    #     if grad < grad_tem:
+    #         grad = grad_tem
+    #         y_tem = y_pred
     #
-    # print("Voting")
-    # y_pred = model.Voting(x_train, y_train, x_test)
-    # index.cal_index(y_pred, y_label)
+    #     print("GradientBoosting")
+    #     y_pred = model.GradientBoosting(x_train, y_train, x_test)
+    #     grad_tem = index.cal_index_sk(y_pred, y_label)
+    #     if grad < grad_tem:
+    #         grad = grad_tem
+    #         y_tem = y_pred
+        print("Voting")
+        y_pred = model.Voting(x_train, y_train, x_test)
+        grad_tem = index.cal_index_sk(y_pred, y_label)
+        if grad < grad_tem:
+            grad = grad_tem
+            y_tem = y_pred
+        Y.append(y_tem)
+    print("###end result ###X")
+    index.cal_index_sk(cal_voting(Y), y_label)
     #
     # print("DS end")
+
+def cal_voting(tem):
+    result = []
+    for i in range(len(tem[0])):
+        black = 0
+        white = 0
+        for key in tem:
+            if key[i] == 0:
+                black += 1
+            elif key[i] == 1:
+                white +=1
+        if black == white:
+            if tem[0][i] == 0:
+                black += 1
+            elif tem[0][i] == 1:
+                white += 1
+        if black > white:
+            result.append(0)
+        else:
+            result.append(1)
+    return result
+
+
+
+
 if __name__ == "__main__":
     main()

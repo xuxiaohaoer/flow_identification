@@ -2,8 +2,8 @@ import pre
 import csv
 
 print("begin")
-x_black = pre.pre_pcap("data/eta/datacon_eta/train/white/", "white")
-
+x_test = pre.pre_pcap("data/eta/datacon_eta/test/", "none")
+print("end")
 #
 # with open("subject.csv", 'w+', newline='') as f:
 #     f_csv = csv.writer(f)

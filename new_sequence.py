@@ -82,6 +82,8 @@ class FeatureType(object):
         self.min_packetsize_packet = 0  # 最小包大小
         self.mean_packetsize_packet = 0  # 平均包大小
         self.std_packetsize_packet = 0  # 均差包大小
+        self.payload_sequence = [] #
+        self.tls_sequence = []
         self.sequence = []  # 自TLS开始的有向序列
         self.num = 0  # 数据流数量
 
@@ -143,7 +145,6 @@ class FeatureType(object):
         self.size_ratio = cal_div(self.size_src, self.num_dst)
         self.by_s = cal_div(self.packetsize_size, self.time)
         self.pk_s = cal_div(self.pack_num, self.time)
-        print(self.name, self.cipher_subject, self.cipher_issue)
         # 加密信息
         # return [self.name, self.cipher_self_signature, self.cipher_certifcate_time, self.cipher_subject,
         #         self.cipher_issue, self.cipher_extension_count, self.cipher_sigature_alo, self.cipher_version, self.cipher_pubkey,
@@ -258,6 +259,7 @@ def parse_ip_packet(eth, nth, timestamp):
 
     flag = socket.inet_ntoa(ip.src) + ' ' + socket.inet_ntoa(ip.dst) + ' ' + str(ip.data.dport) + ' ' + str(
         ip.data.sport)
+    # 流标示
     flag_1 = socket.inet_ntoa(ip.dst) + ' ' + socket.inet_ntoa(ip.src) + ' ' + str(ip.data.sport) + ' ' + str(
         ip.data.dport)
     if contact.__contains__(flag):
@@ -273,6 +275,7 @@ def parse_ip_packet(eth, nth, timestamp):
         contact[flag] = tem
     feature.packetsize_size += size
     if isinstance(ip.data, dpkt.tcp.TCP) and payload:
+        # 分析tcp包
         rest_load = parse_tcp_packet(ip, nth, timestamp)
         for key in ip.data.data:
             feature.cipher_content[key] += 1

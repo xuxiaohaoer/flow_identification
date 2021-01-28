@@ -1,4 +1,4 @@
-192.168.138.207,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
+conda 192.168.138.207,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
 192.168.253.235,['tgrmn.com'],['COMODO RSA Domain Validation Secure Server CA'],white
 192.168.173.58,['fullscreensavers.com'],["Let's Encrypt Authority X3"],white
 192.168.107.38,['sapi.norton.com'],['DigiCert Global CA G2'],white
@@ -51,7 +51,7 @@
 192.168.101.154,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
 192.168.128.219,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.223.133,['ninite.com'],['Amazon'],white
-192.168.210.7,[],[],white
+192.168.210.7,['google.com'],['GTS CA 1O1'],white
 192.168.16.170,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.57.53,['ninite.com'],['Amazon'],white
 192.168.136.193,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -87,7 +87,7 @@
 192.168.123.185,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.117.169,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.198.105,['*.g.doubleclick.net'],['GTS CA 1O1'],white
-192.168.147.175,[],[],white
+192.168.147.175,['google.com'],['GTS CA 1O1'],white
 192.168.96.159,['google.com'],['GTS CA 1O1'],white
 192.168.121.73,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.132.215,['*.oschina.net'],['TrustAsia TLS RSA CA'],white
@@ -163,7 +163,7 @@
 192.168.152.197,['get.adobe.com'],['DigiCert SHA2 Secure Server CA'],white
 192.168.253.171,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.19.22,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.240.238,[],[],white
+192.168.240.238,['google.com'],['GTS CA 1O1'],white
 192.168.120.191,['www.microsoft.com'],['Microsoft IT TLS CA 5'],white
 192.168.27.96,['*.cdn.myqcloud.com'],['Sectigo RSA Domain Validation Secure Server CA'],white
 192.168.54.66,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -354,7 +354,7 @@
 192.168.186.37,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.5.42,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.127.16,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
-192.168.191.207,[],[],white
+192.168.191.207,['google.com'],['GTS CA 1O1'],white
 192.168.247.156,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.185.242,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.255.6,"['*.app10-15.logmein.com', 'secure.logmeinrescue.com', '*.app10-05.logmein.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
@@ -362,7 +362,7 @@
 192.168.67.147,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.71.131,['*.google.com'],['GTS CA 1O1'],white
 192.168.16.196,['download.visualstudio.microsoft.com'],['Microsoft IT TLS CA 5'],white
-192.168.129.142,[],[],white
+192.168.129.142,['google.com'],['GTS CA 1O1'],white
 192.168.113.31,['google.com'],['GTS CA 1O1'],white
 192.168.125.53,"['mrodevicemgr.officeapps.live.com', 'nexusrules.officeapps.live.com', 'ecs.office.com']","['Microsoft IT TLS CA 5', 'Microsoft IT TLS CA 2', 'Microsoft IT TLS CA 1']",white
 192.168.206.183,['console.cloudendure.com'],['Amazon'],white
@@ -411,7 +411,7 @@
 192.168.20.97,"['*.ys7.com', '*.ys7.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
 192.168.247.140,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.167.65,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.202.197,[],[],white
+192.168.202.197,['api.browser.yandex.ru'],['Yandex CA'],white
 192.168.209.224,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.240.188,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.127.217,['google.com'],['GTS CA 1O1'],white
@@ -436,9 +436,9 @@
 192.168.218.148,['google.com'],['GTS CA 1O1'],white
 192.168.48.5,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.99.144,['google.com'],['GTS CA 1O1'],white
-192.168.57.107,[],[],white
+192.168.57.107,['google.com'],['GTS CA 1O1'],white
 192.168.240.97,['baidu.com'],['GlobalSign Organization Validation CA - SHA256 - G2'],white
-192.168.12.164,[],[],white
+192.168.12.164,['google.com'],['GTS CA 1O1'],white
 192.168.108.89,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.220.192,['google.com'],['GTS CA 1O1'],white
 192.168.169.24,['baidu.com'],['GlobalSign Organization Validation CA - SHA256 - G2'],white
@@ -485,7 +485,7 @@
 192.168.63.58,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.14.81,['google.com'],['GTS CA 1O1'],white
 192.168.253.122,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
-192.168.226.39,[],[],white
+192.168.226.39,['google.com'],['GTS CA 1O1'],white
 192.168.232.201,['ninite.com'],['Amazon'],white
 192.168.149.188,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.25.231,[],[],white
@@ -515,7 +515,7 @@
 192.168.137.25,"['*.mql5.com', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net']","['Sectigo ECC Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA']",white
 192.168.248.213,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.245.229,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.92.151,[],[],white
+192.168.92.151,['google.com'],['GTS CA 1O1'],white
 192.168.108.140,['google.com'],['GTS CA 1O1'],white
 192.168.8.209,"['izhongcheng.cn', '*.cdn.myqcloud.com', '*.adobe.com']","['GeoTrust CN RSA CA G1', 'Sectigo RSA Domain Validation Secure Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.204.218,['*.pdfsam.org'],['AlphaSSL CA - SHA256 - G2'],white
@@ -571,7 +571,7 @@
 192.168.246.224,"['ssl4.chinanetcenter.com', 'ssl4.chinanetcenter.com']","['DigiCert CN RSA CA G1', 'DigiCert CN RSA CA G1']",white
 192.168.215.111,['full-crack.vn'],['full-crack.vn'],white
 192.168.139.143,"['izhongcheng.cn', '*.cdn.myqcloud.com']","['GeoTrust CN RSA CA G1', 'Sectigo RSA Domain Validation Secure Server CA']",white
-192.168.175.72,[],[],white
+192.168.175.72,['google.com'],['GTS CA 1O1'],white
 192.168.72.25,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.175.231,['*.mail.ru'],['GeoTrust RSA CA 2018'],white
 192.168.83.43,"['secure.logmeinrescue-enterprise.com', '*.app10-12.logmein.com', '*.app10-08.logmein.com', '*.app10-01.logmein.com', '*.app10-12.logmein.com', '*.app10-14.logmein.com', '*.app10-01.logmein.com', '*.app10-10.logmein.com', '*.app10-14.logmein.com', '*.app10-05.logmein.com', '*.app10-09.logmein.com']","['GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
@@ -621,14 +621,14 @@
 192.168.179.122,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.64.214,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.98.72,['google.com'],['GTS CA 1O1'],white
-192.168.89.238,[],[],white
+192.168.89.238,['google.com'],['GTS CA 1O1'],white
 192.168.204.181,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.106.40,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.80.248,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.150.5,['google.com'],['GTS CA 1O1'],white
 192.168.146.62,['edf.eset.com'],['Thawte RSA CA 2018'],white
 192.168.206.230,['*.t-money.co.kr'],['RapidSSL CA'],white
-192.168.219.196,[],[],white
+192.168.219.196,['google.com'],['GTS CA 1O1'],white
 192.168.108.34,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
 192.168.200.42,"['*.ssl.qhimg.com', '*.ssl.qhimg.com']","['WoTrus OV SSL CA', 'WoTrus OV SSL CA']",white
 192.168.20.19,['google.com'],['GTS CA 1O1'],white
@@ -703,7 +703,7 @@
 192.168.211.123,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.236.127,"['go.microsoft.com', 'download.visualstudio.microsoft.com']","['Microsoft IT TLS CA 5', 'Microsoft IT TLS CA 5']",white
 192.168.141.188,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.127.107,[],[],white
+192.168.127.107,['google.com'],['GTS CA 1O1'],white
 192.168.42.74,['google.com'],['GTS CA 1O1'],white
 192.168.65.53,['google.com'],['GTS CA 1O1'],white
 192.168.104.188,['google.com'],['GTS CA 1O1'],white
@@ -715,7 +715,7 @@
 192.168.7.13,['google.com'],['GTS CA 1O1'],white
 192.168.182.28,"['secure.logmeinrescue.com', '*.app10-13.logmein.com', '*.app10-09.logmein.com', '*.app10-03.logmein.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
 192.168.18.217,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.247.13,[],[],white
+192.168.247.13,['google.com'],['GTS CA 1O1'],white
 192.168.87.37,['google.com'],['GTS CA 1O1'],white
 192.168.242.89,"['*.chistilka.com', 'chistilka.ru']","['Sectigo RSA Domain Validation Secure Server CA', ""Let's Encrypt Authority X3""]",white
 192.168.34.134,"['*.adobe.com', 'a248.e.akamai.net']","['DigiCert SHA2 Secure Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -750,9 +750,9 @@
 192.168.204.245,"['*.mql5.com', '*.mql5.com']","['Sectigo ECC Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA']",white
 192.168.136.160,['download.eset.com'],['Thawte RSA CA 2018'],white
 192.168.176.243,['rs1.malwarebytes.com'],['DigiCert SHA2 High Assurance Server CA'],white
-192.168.231.141,[],[],white
+192.168.231.141,['google.com'],['GTS CA 1O1'],white
 192.168.125.132,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.91.88,[],[],white
+192.168.91.88,['google.com'],['GTS CA 1O1'],white
 192.168.74.76,['google.com'],['GTS CA 1O1'],white
 192.168.121.104,['google.com'],['GTS CA 1O1'],white
 192.168.104.184,"['izhongcheng.cn', '*.cdn.myqcloud.com']","['GeoTrust CN RSA CA G1', 'Sectigo RSA Domain Validation Secure Server CA']",white
@@ -775,7 +775,7 @@
 192.168.66.73,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.107.251,['google.com'],['GTS CA 1O1'],white
 192.168.235.148,['a248.cn.w.tl88.net'],['DigiCert SHA2 Secure Server CA'],white
-192.168.10.163,[],[],white
+192.168.10.163,['google.com'],GTS CA 1O1'],white
 192.168.121.142,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.157.55,"['google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.7.190,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -853,7 +853,7 @@
 192.168.211.123,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.236.127,"['go.microsoft.com', 'download.visualstudio.microsoft.com']","['Microsoft IT TLS CA 5', 'Microsoft IT TLS CA 5']",white
 192.168.141.188,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.127.107,[],[],white
+192.168.127.107,['google.com'],['GTS CA 1O1'],white
 192.168.42.74,['google.com'],['GTS CA 1O1'],white
 192.168.65.53,['google.com'],['GTS CA 1O1'],white
 192.168.104.188,['google.com'],['GTS CA 1O1'],white
@@ -865,7 +865,7 @@
 192.168.7.13,['google.com'],['GTS CA 1O1'],white
 192.168.182.28,"['secure.logmeinrescue.com', '*.app10-13.logmein.com', '*.app10-09.logmein.com', '*.app10-03.logmein.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
 192.168.18.217,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.247.13,[],[],white
+192.168.247.13,['google.com'],['GTS CA 1O1'],white
 192.168.87.37,['google.com'],['GTS CA 1O1'],white
 192.168.242.89,"['*.chistilka.com', 'chistilka.ru']","['Sectigo RSA Domain Validation Secure Server CA', ""Let's Encrypt Authority X3""]",white
 192.168.34.134,"['*.adobe.com', 'a248.e.akamai.net']","['DigiCert SHA2 Secure Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -900,9 +900,9 @@
 192.168.204.245,"['*.mql5.com', '*.mql5.com']","['Sectigo ECC Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA']",white
 192.168.136.160,['download.eset.com'],['Thawte RSA CA 2018'],white
 192.168.176.243,['rs1.malwarebytes.com'],['DigiCert SHA2 High Assurance Server CA'],white
-192.168.231.141,[],[],white
+192.168.231.141,['google.com'],['GTS CA 1O1'],white
 192.168.125.132,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.91.88,[],[],white
+192.168.91.88,['google.com'],['GTS CA 1O1'],white
 192.168.74.76,['google.com'],['GTS CA 1O1'],white
 192.168.121.104,['google.com'],['GTS CA 1O1'],white
 192.168.104.184,"['izhongcheng.cn', '*.cdn.myqcloud.com']","['GeoTrust CN RSA CA G1', 'Sectigo RSA Domain Validation Secure Server CA']",white
@@ -925,7 +925,7 @@
 192.168.66.73,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.107.251,['google.com'],['GTS CA 1O1'],white
 192.168.235.148,['a248.cn.w.tl88.net'],['DigiCert SHA2 Secure Server CA'],white
-192.168.10.163,[],[],white
+192.168.10.163,['google.com'],['GTS CA 1O1'],white
 192.168.121.142,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.157.55,"['google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.7.190,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -1009,7 +1009,7 @@
 192.168.16.236," ['google.com', 'google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.171.207,['api.browser.yandex.ru'],['Yandex CA'],white
 192.168.254.114,['baidu.com'],['GlobalSign Organization Validation CA - SHA256 - G2'],white
-192.168.15.107,[],[],white
+192.168.15.107,['google.com'],['GTS CA 1O1'],white
 192.168.208.48,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.251.200,['baidu.com'],['GlobalSign Organization Validation CA - SHA256 - G2'],white
 192.168.15.243,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -1018,7 +1018,7 @@
 192.168.44.165,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.145.179,"['webssl.chinanetcenter.com', 'webssl.chinanetcenter.com']","['DigiCert CN RSA CA G1', 'DigiCert CN RSA CA G1']",white
 192.168.99.195,['crystalidea.com'],["Let's Encrypt Authority X3"],white
-192.168.44.0,[],[],white
+192.168.44.0,['google.com'],['GTS CA 1O1'],white
 192.168.198.255,"['izhongcheng.cn', '*.cdn.myqcloud.com']","['GeoTrust CN RSA CA G1', 'Sectigo RSA Domain Validation Secure Server CA']",white
 192.168.191.5,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.39.157,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -1104,7 +1104,7 @@
 192.168.22.22,['google.com'],['GTS CA 1O1'],white
 192.168.205.199,['*.tim.qq.com'],['Secure Site CA G2'],white
 192.168.17.59,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.52.189,[],[],white
+192.168.52.189,['google.com'],['GTS CA 1O1'],white
 192.168.126.86,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.77.167,[],[],white
 192.168.136.244,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -1182,7 +1182,7 @@
 192.168.86.34,['*.qy.net'],['GlobalSign RSA OV SSL CA 2018'],white
 192.168.10.51,['*.sogou.com'],['GlobalSign RSA OV SSL CA 2018'],white
 192.168.136.202,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
-192.168.60.51,[],[],white
+192.168.60.51,['google.com'],['GTS CA 1O1'],white
 192.168.32.220,['*.sogou.com'],['GlobalSign RSA OV SSL CA 2018'],white
 192.168.240.82,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.94.131,['google.com'],['GTS CA 1O1'],white
@@ -1194,7 +1194,7 @@
 192.168.19.212,"['sls.update.microsoft.com', 'sls.update.microsoft.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft Update Secure Server CA 2.1']",white
 192.168.26.112,['google.com'],['GTS CA 1O1'],white
 192.168.123.128,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.90.240,[],[],white
+192.168.90.240,"['launch.getgo.com', 'launch.getgo.com']","['DigiCert SHA2 Secure Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.113.41,['*.3737.com'],['RapidSSL RSA CA 2018'],white
 192.168.150.19,['google.com'],['GTS CA 1O1'],white
 192.168.103.56,['ninite.com'],['Amazon'],white
@@ -1358,7 +1358,7 @@
 192.168.97.17,['*.adobe.com'],['DigiCert SHA2 Secure Server CA'],white
 192.168.155.23,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.16.171,['*.avast.com'],['DigiCert SHA2 High Assurance Server CA'],white
-192.168.72.16,[],[],white
+192.168.72.16,['google.com'],['GTS CA 1O1'],white
 192.168.35.191,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.81.201,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.200.127,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
@@ -1415,7 +1415,7 @@
 192.168.140.191,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.4.208,['*.adobe.com'],['DigiCert SHA2 Secure Server CA'],white
 192.168.10.18,['google.com'],['GTS CA 1O1'],white
-192.168.60.41,[],[],white
+192.168.60.41,['google.com'],['GTS CA 1O1'],white
 192.168.14.178,"['comm.weixin.qq.com', '*.weixin.qq.com']","['GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
 192.168.30.186,['autoupdate.opera.com'],['DigiCert SHA2 High Assurance Server CA'],white
 192.168.28.61,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -1432,7 +1432,7 @@
 192.168.159.155,"['secure.logmeinrescue.com', '*.app10-14.logmein.com', '*.app10-03.logmein.com', '*.app10-03.logmein.com', '*.app10-04.logmein.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
 192.168.160.192,['google.com'],['GTS CA 1O1'],white
 192.168.80.253,['*.pdfsam.org'],['AlphaSSL CA - SHA256 - G2'],white
-192.168.165.195,[],[],white
+192.168.165.195,['google.com'],['GTS CA 1O1'],white
 192.168.237.241,['google.com'],['GTS CA 1O1'],white
 192.168.110.121,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.6.108,['google.com'],['GTS CA 1O1'],white
@@ -1542,7 +1542,7 @@
 192.168.179.67,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.40.45,['*.youku.com'],['GlobalSign Organization Validation CA - SHA256 - G2'],white
 192.168.96.234,['google.com'],['GTS CA 1O1'],white
-192.168.110.193,[],[],white
+192.168.110.193,['google.com'],['GTS CA 1O1'],white
 192.168.46.238,['google.com'],['GTS CA 1O1'],white
 192.168.114.64,['*.fangyi.cn'],['DigiCert SHA2 Secure Server CA'],white
 192.168.75.140,['google.com'],['GTS CA 1O1'],white
@@ -1605,9 +1605,9 @@
 192.168.212.177,['google.com'],['GTS CA 1O1'],white
 192.168.37.146,['google.com'],['GTS CA 1O1'],white
 192.168.93.92,['disc-soft.com'],['Go Daddy Secure Certificate Authority - G2'],white
-192.168.82.71,[],[],white
+192.168.82.71,['google.com'],['GTS CA 1O1'],white
 192.168.135.195,"['*.google-analytics.com', '*.google-analytics.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.71.72,[],[],white
+192.168.71.72,['google.com'],['GTS CA 1O1'],white
 192.168.126.13,['*.audio4fun.com'],['Sectigo RSA Domain Validation Secure Server CA'],white
 192.168.72.132,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.117.128,"['ecs.office.com', 'nexusrules.officeapps.live.com']","['Microsoft IT TLS CA 1', 'Microsoft IT TLS CA 2']",white
@@ -1672,7 +1672,7 @@
 192.168.74.154,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.89.160,['google.com'],['GTS CA 1O1'],white
 192.168.179.78,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.33.21,[],[],white
+192.168.33.21,['google.com'],['GTS CA 1O1'],white
 192.168.251.33,['google.com'],['GTS CA 1O1'],white
 192.168.244.9,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.49.228,['baidu.com'],['GlobalSign Organization Validation CA - SHA256 - G2'],white
@@ -1734,7 +1734,7 @@
 192.168.66.102,"['*.adobe.com', 'get.adobe.com', 'izhongcheng.cn', 'izhongcheng.cn', 'baidu.com', '*.cdn.myqcloud.com']","['DigiCert SHA2 Secure Server CA', 'DigiCert SHA2 Secure Server CA', 'GeoTrust CN RSA CA G1', 'GeoTrust CN RSA CA G1', 'GlobalSign Organization Validation CA - SHA256 - G2', 'Sectigo RSA Domain Validation Secure Server CA']",white
 192.168.81.241,['origin-news.qq.com'],['Secure Site CA G2'],white
 192.168.176.220,['*.google.com'],['GTS CA 1O1'],white
-192.168.15.168,[],[],white
+192.168.15.168,['google.com'],['GTS CA 1O1'],white
 192.168.35.88,['google.com'],['GTS CA 1O1'],white
 192.168.78.212,"['*.screencast-o-matic.com', '*.screencast-o-matic.com']","['DigiCert SHA2 Secure Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.129.195,"['launch.getgo.com', 'livessl.chinanetcenter.com']","['DigiCert SHA2 Secure Server CA', 'DigiCert CN RSA CA G1']",white
@@ -1786,11 +1786,11 @@
 192.168.50.124,"['sls.update.microsoft.com', 'settings.data.microsoft.com', 'g.msn.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 1', 'Microsoft IT TLS CA 2']",white
 192.168.165.52,['google.com'],['GTS CA 1O1'],white
 192.168.137.232,"['get.adobe.com', 'izhongcheng.cn', 'baidu.com']","['DigiCert SHA2 Secure Server CA', 'GeoTrust CN RSA CA G1', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
-192.168.38.117,[],[],white
+192.168.38.117,"['settings.data.microsoft.com', 'settings.data.microsoft.com', 'settings.data.microsoft.com', 'settings.data.microsoft.com']","['Microsoft IT TLS CA 1', 'Microsoft IT TLS CA 1', 'Microsoft IT TLS CA 1', 'Microsoft IT TLS CA 1']",white
 192.168.173.180,"['google.com', 'google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.156.124,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.188.38,['google.com'],['GTS CA 1O1'],white
-192.168.240.2,[],[],white
+192.168.240.2,['google.com'],['GTS CA 1O1'],white
 192.168.185.52,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 1']",white
 192.168.9.180,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.185.218,['*.avast.com'],['DigiCert SHA2 High Assurance Server CA'],white
@@ -1799,14 +1799,14 @@
 192.168.237.147,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.218.138,['veridium.net'],['Sectigo RSA Domain Validation Secure Server CA'],white
 192.168.55.232,['google.com'],['GTS CA 1O1'],white
-192.168.155.232,[],[],white
+192.168.155.232,['google.com'],['GTS CA 1O1'],white
 192.168.126.190,['webdav.yandex.ru'],['Yandex CA'],white
 192.168.18.150,['google.com'],['GTS CA 1O1'],white
 192.168.18.38,"['ecs.office.com', 'nexusrules.officeapps.live.com']","['Microsoft IT TLS CA 1', 'Microsoft IT TLS CA 2']",white
 192.168.160.204,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.173.25,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.206.140,"['ninite.com', 'ninite.com']","['Amazon', 'Amazon']",white
-192.168.96.103,[],[],white
+192.168.96.103,['google.com'],['GTS CA 1O1'],white
 192.168.78.102,['*.oss-cn-beijing.aliyuncs.com'],['GlobalSign Organization Validation CA - SHA256 - G2'],white
 192.168.54.243,['google.com'],['GTS CA 1O1'],white
 192.168.90.42,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -1829,13 +1829,13 @@
 192.168.137.187,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.16.230,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
 192.168.19.208,['ninite.com'],['Amazon'],white
-192.168.228.164,[],[],white
+192.168.228.164,['google.com'],['GTS CA 1O1'],white
 192.168.39.111,"['secure.logmeinrescue.com', '*.app10-10.logmein.com', '*.app10-12.logmein.com', '*.app10-09.logmein.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
 192.168.244.119,"['get.adobe.com', 'izhongcheng.cn', 'izhongcheng.cn', 'baidu.com']","['DigiCert SHA2 Secure Server CA', 'GeoTrust CN RSA CA G1', 'GeoTrust CN RSA CA G1', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
 192.168.170.247,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.1.164,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.47.221,"['google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.173.179,[],[],white
+192.168.173.179,['google.com'],['GTS CA 1O1'],white
 192.168.31.34,['www.filezilla-project.org'],["Let's Encrypt Authority X3"],white
 192.168.181.15,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.217.125,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
@@ -1904,7 +1904,7 @@
 192.168.18.233,"['get.adobe.com', 'izhongcheng.cn', 'baidu.com']","['DigiCert SHA2 Secure Server CA', 'GeoTrust CN RSA CA G1', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
 192.168.148.199,['livessl.chinanetcenter.com'],['DigiCert CN RSA CA G1'],white
 192.168.13.177,['*.adobe.com'],['DigiCert SHA2 Secure Server CA'],white
-192.168.249.121,[],[],white
+192.168.249.121,['google.com'],['GTS CA 1O1'],white
 192.168.196.181,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.225.108,"['google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.199.149,['google.com'],['GTS CA 1O1'],white
@@ -1926,7 +1926,7 @@
 192.168.94.142,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.207.134,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.152.201,['google.com'],['GTS CA 1O1'],white
-192.168.73.90,[],[],white
+192.168.73.90,['google.com'],['GTS CA 1O1'],white
 192.168.207.58,['google.com'],['GTS CA 1O1'],white
 192.168.125.126,"['*.google-analytics.com', '*.google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.84.70,['ninite.com'],['Amazon'],white
@@ -2031,7 +2031,7 @@
 192.168.67.149,['google.com'],['GTS CA 1O1'],white
 192.168.199.194,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.132.230,['img.wallpaperseveryday.com'],["Let's Encrypt Authority X3"],white
-192.168.246.127,[],[],white
+192.168.246.127,['google.com'],['GTS CA 1O1'],white
 192.168.128.14,['google.com'],['GTS CA 1O1'],white
 192.168.195.44,"['ecs.office.com', 'nexusrules.officeapps.live.com']","['Microsoft IT TLS CA 1', 'Microsoft IT TLS CA 2']",white
 192.168.60.147,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -2091,7 +2091,7 @@
 192.168.84.82,['*.screencast-o-matic.com'],['DigiCert SHA2 Secure Server CA'],white
 192.168.82.94,['google.com'],['GTS CA 1O1'],white
 192.168.204.24,"['*.cdn.bcebos.com', '*.cdn.bcebos.com']","['DigiCert SHA2 Secure Server CA', 'DigiCert SHA2 Secure Server CA']",white
-192.168.172.55,[],[],white
+192.168.172.55,['google.com'],['GTS CA 1O1'],white
 192.168.92.210,['ninite.com'],['Amazon'],white
 192.168.219.233,"['*.tanx.com', '*.tmall.com', '*.alicdn.com', '*.alicdn.com']","['GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
 192.168.182.51,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
@@ -2103,7 +2103,7 @@
 192.168.32.215,"['a248.e.akamai.net', '*.content.disney.io']","['DigiCert SHA2 Secure Server CA', 'Entrust Certification Authority - L1K']",white
 192.168.215.167,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.231.48,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.77.80,[],[],white
+192.168.77.80,['google.com'],['GTS CA 1O1'],white
 192.168.69.91,"['*.mql5.com', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net']","['Sectigo ECC Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA']",white
 192.168.20.154,"['*.itop.qq.com', '*.weixin.qq.com', '*.weixin.qq.com']","['Secure Site CA G2', 'GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
 192.168.179.21,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -2207,9 +2207,9 @@
 192.168.61.64,"['*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.com']","['Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA']",white
 192.168.182.225,['builds.getgocdn.com'],['DigiCert SHA2 Secure Server CA'],white
 192.168.128.156,"['livessl.chinanetcenter.com', 'builds.getgocdn.com']","['DigiCert CN RSA CA G1', 'DigiCert SHA2 Secure Server CA']",white
-192.168.38.174,[],[],white
+192.168.38.174,['google.com'],['GTS CA 1O1'],white
 192.168.4.143,"['get.adobe.com', 'izhongcheng.cn', 'baidu.com', '*.cdn.myqcloud.com']","['DigiCert SHA2 Secure Server CA', 'GeoTrust CN RSA CA G1', 'GlobalSign Organization Validation CA - SHA256 - G2', 'Sectigo RSA Domain Validation Secure Server CA']",white
-192.168.98.42,[],[],white
+192.168.98.42,['google.com'],['GTS CA 1O1'],white
 192.168.194.185,['*.cdn.myqcloud.com'],['Sectigo RSA Domain Validation Secure Server CA'],white
 192.168.149.250,"['baidu.com', 'baidu.com']","['GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
 192.168.148.178,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -2262,7 +2262,7 @@
 192.168.255.132,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.187.188,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.79.83,['google.com'],['GTS CA 1O1'],white
-192.168.127.103,[],[],white
+192.168.127.103,['google.com'],['GTS CA 1O1'],white
 192.168.163.248,['google.com'],['GTS CA 1O1'],white
 192.168.148.23,['*.google.com'],['GTS CA 1O1'],white
 192.168.15.106,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
@@ -2383,7 +2383,7 @@
 192.168.184.44,['google.com'],['GTS CA 1O1'],white
 192.168.26.160,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.177.222,['apowersoft.cn'],["Let's Encrypt Authority X3"],white
-192.168.163.88,[],[],white
+192.168.163.88,['google.com'],['GTS CA 1O1'],white
 192.168.81.211,['google.com'],['GTS CA 1O1'],white
 192.168.111.222,['google.com'],['GTS CA 1O1'],white
 192.168.230.29,['google.com'],['GTS CA 1O1'],white
@@ -2501,7 +2501,7 @@
 192.168.131.212,"['sls.update.microsoft.com', 'sls.update.microsoft.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft Update Secure Server CA 2.1']",white
 192.168.242.160,"['*.s3.amazonaws.com', '*.s3.amazonaws.com']","['DigiCert Baltimore CA-2 G2', 'DigiCert Baltimore CA-2 G2']",white
 192.168.191.246,['google.com'],['GTS CA 1O1'],white
-192.168.2.213,[],[],white
+192.168.2.213,['google.com'],['GTS CA 1O1'],white
 192.168.145.81,"['google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.207.130,['google.com'],['GTS CA 1O1'],white
 192.168.30.170,['ninite.com'],['Amazon'],white
@@ -2511,7 +2511,7 @@
 192.168.25.15,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.81.10,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.149.146,['ninite.com'],['Amazon'],white
-192.168.116.189,[],[],white
+192.168.116.189,['google.com'],['GTS CA 1O1'],white
 192.168.13.221,"['sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
 192.168.69.241,"['*.aug04.sparta.3g.qq.com', 'api.huodong.prize.qq.com']","['GlobalSign Organization Validation CA - SHA256 - G2', 'Secure Site CA G2']",white
 192.168.236.180,"['AnyNet Relay', 'AnyDesk Client']","['AnyNet Root CA', 'AnyDesk Client']",white
@@ -2543,7 +2543,7 @@
 192.168.168.135,['google.com'],['GTS CA 1O1'],white
 192.168.215.146,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.27.11,['*.lk.chokun.ru'],["Let's Encrypt Authority X3"],white
-192.168.152.131,[],[],white
+192.168.152.131,['google.com'],['GTS CA 1O1'],white
 192.168.61.2,['autoupdate.opera.com'],['DigiCert SHA2 High Assurance Server CA'],white
 192.168.55.133,['google.com'],['GTS CA 1O1'],white
 192.168.133.232,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -2553,7 +2553,7 @@
 192.168.34.58,['default.ssl.cdn.jiasule.com'],['default.ssl.cdn.jiasule.com'],white
 192.168.197.97,['ninite.com'],['Amazon'],white
 192.168.207.12,['google.com'],['GTS CA 1O1'],white
-192.168.121.232,[],[],white
+192.168.121.232,['google.com'],['GTS CA 1O1'],white
 192.168.176.158,['google.com'],['GTS CA 1O1'],white
 192.168.71.149,['google.com'],['GTS CA 1O1'],white
 192.168.77.104,"['*.mql5.com', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net', '*.mql5.net']","['Sectigo ECC Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo RSA Domain Validation Secure Server CA', 'Sectigo ECC Domain Validation Secure Server CA']",white
@@ -2569,7 +2569,7 @@
 192.168.146.143,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.123.37,['tj.67ak.com'],['Encryption Everywhere DV TLS CA - G1'],white
 192.168.243.81,['google.com'],['GTS CA 1O1'],white
-192.168.84.210,[],[],white
+192.168.84.210,['google.com'],['GTS CA 1O1'],white
 192.168.4.180,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.123.142,['*.mathworks.com'],['DigiCert SHA2 Secure Server CA'],white
 192.168.147.180,['*.cloudfront.net'],['DigiCert Global CA G2'],white
@@ -2703,11 +2703,11 @@
 192.168.9.188,['google.com'],['GTS CA 1O1'],white
 192.168.127.135,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.202.9,"['google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.82.138,[],[],white
+192.168.82.138,['google.com'],['GTS CA 1O1'],white
 192.168.189.79,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.65.50,"['*.cnzz.com', '*.cnzz.com', '*.mmstat.com', 'baidu.com']","['GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
 192.168.207.0,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
-192.168.128.158,[],[],white
+192.168.128.158,['google.com'],['GTS CA 1O1'],white
 192.168.146.77,['*.google-analytics.com'],['GTS CA 1O1'],white
 192.168.141.2,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.79.19,"['*.sogou.com', '*.sogou.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
@@ -2720,7 +2720,7 @@
 192.168.232.195,"['izhongcheng.cn', '*.cdn.myqcloud.com']","['GeoTrust CN RSA CA G1', 'Sectigo RSA Domain Validation Secure Server CA']",white
 192.168.136.36,['google.com'],['GTS CA 1O1'],white
 192.168.129.97,"['get.adobe.com', 'izhongcheng.cn', 'izhongcheng.cn', 'baidu.com', '*.cdn.myqcloud.com']","['DigiCert SHA2 Secure Server CA', 'GeoTrust CN RSA CA G1', 'GeoTrust CN RSA CA G1', 'GlobalSign Organization Validation CA - SHA256 - G2', 'Sectigo RSA Domain Validation Secure Server CA']",white
-192.168.206.98,[],[],white
+192.168.206.98,['google.com'],['GTS CA 1O1'],white
 192.168.192.128,"['sls.update.microsoft.com', 'settings.data.microsoft.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 1']",white
 192.168.151.119,"['*.app10-06.logmein.com', '*.app10-06.logmein.com', '*.app10-09.logmein.com', '*.app10-08.logmein.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
 192.168.5.166,"['launch.getgo.com', 'launch.getgo.com']","['DigiCert SHA2 Secure Server CA', 'DigiCert SHA2 Secure Server CA']",white
@@ -2795,7 +2795,7 @@
 192.168.156.48,['google.com'],['GTS CA 1O1'],white
 192.168.12.104,['*.pdfsam.org'],['AlphaSSL CA - SHA256 - G2'],white
 192.168.199.51,['webdav.yandex.ru'],['Yandex CA'],white
-192.168.32.186,[],[],white
+192.168.32.186,['google.com'],['GTS CA 1O1'],white
 192.168.144.212,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.118.76,['*.g.doubleclick.net'],['GTS CA 1O1'],white
 192.168.242.108,"['*.taobao.com', '*.tmall.com', '*.alicdn.com', '*.alicdn.com']","['GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2', 'GlobalSign Organization Validation CA - SHA256 - G2']",white
@@ -2809,7 +2809,7 @@
 192.168.220.179,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.125.170,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.46.34,['google.com'],['GTS CA 1O1'],white
-192.168.89.108,[],[],white
+192.168.89.108,['google.com'],['GTS CA 1O1'],white
 192.168.47.150,['ninite.com'],['Amazon'],white
 192.168.34.26,['*.trendmicro.com'],['AffirmTrust Certificate Authority - OV1'],white
 192.168.41.204,['google.com'],['GTS CA 1O1'],white
@@ -2914,7 +2914,7 @@
 192.168.108.91,['ninite.com'],['Amazon'],white
 192.168.180.71,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.117.118,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
-192.168.187.64,[],[],white
+192.168.187.64,['google.com'],['GTS CA 1O1'],white
 192.168.234.95,['reqbus.ru'],["Let's Encrypt Authority X3"],white
 192.168.153.130,['google.com'],['GTS CA 1O1'],white
 192.168.123.77,['*.spotify.com'],['DigiCert SHA2 Secure Server CA'],white
@@ -2936,7 +2936,7 @@
 192.168.208.22,"['api.browser.yandex.ru', 'cdn.yandex.net', 'api.browser.yandex.ru', 'cdn.yandex.net']","['Yandex CA', 'Yandex CA', 'Yandex CA', 'Yandex CA']",white
 192.168.209.128,['*.iclass30.com'],['GeoTrust RSA CA 2018'],white
 192.168.132.123,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
-192.168.154.184,[],[],white
+192.168.154.184,['google.com'],['GTS CA 1O1'],white
 192.168.132.34,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.70.237,"['*.shinnytech.com', 'mdapi.shinnytech.com', '*.shinnytech.com']","['GeoTrust RSA CA 2018', 'RapidSSL SHA256 CA', 'GeoTrust RSA CA 2018']",white
 192.168.23.181,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
@@ -3010,7 +3010,7 @@
 192.168.184.37,['google.com'],['GTS CA 1O1'],white
 192.168.217.47,['*.screencast-o-matic.com'],['DigiCert SHA2 Secure Server CA'],white
 192.168.42.120,"['ninite.com', 'ninite.com']","['Amazon', 'Amazon']",white
-192.168.69.73,[],[],white
+192.168.69.73,['google.com'],['GTS CA 1O1'],white
 192.168.200.237," ['google.com', 'google.com', 'google.com', 'google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.39.128,"['secure.logmeinrescue.com', '*.app10-01.logmein.com', '*.app10-14.logmein.com', '*.app10-03.logmein.com', '*.app10-13.logmein.com']","['GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018', 'GlobalSign RSA OV SSL CA 2018']",white
 192.168.243.8,['fpdownload.macromedia.com'],['DigiCert SHA2 Secure Server CA'],white
@@ -3030,7 +3030,7 @@
 192.168.159.237,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.140.122,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.188.165,"['google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.111.147,[],[],white
+192.168.111.147,['google.com'],['GTS CA 1O1'],white
 192.168.245.100,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.243.13,['webssl.chinanetcenter.com'],['DigiCert CN RSA CA G1'],white
 192.168.116.54,['webdav.yandex.ru'],['Yandex CA'],white
@@ -3043,7 +3043,7 @@
 192.168.199.145,['google.com'],['GTS CA 1O1'],white
 192.168.220.90,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white
 192.168.253.217,['*.cdn.myqcloud.com'],['Sectigo RSA Domain Validation Secure Server CA'],white
-192.168.6.124,[],[],white
+192.168.6.124,"['login.live.com', 'login.live.com', 'login.live.com', 'login.live.com']","['Microsoft IT TLS CA 2', 'Microsoft IT TLS CA 2', 'Microsoft IT TLS CA 2', 'Microsoft IT TLS CA 2']",white
 192.168.135.219,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.1.174,['sapi.norton.com'],['DigiCert Global CA G2'],white
 192.168.69.229,['www.esp.pe'],['GlobalSign RSA DV SSL CA 2018'],white
@@ -3090,7 +3090,7 @@
 192.168.88.104,"['sls.update.microsoft.com', 'sls.update.microsoft.com', 'login.live.com']","['Microsoft Update Secure Server CA 2.1', 'Microsoft Update Secure Server CA 2.1', 'Microsoft IT TLS CA 2']",white
 192.168.207.18,['sls.update.microsoft.com'],['Microsoft Update Secure Server CA 2.1'],white
 192.168.82.61,['ereg.bir.gov.ph'],['GlobalSign RSA OV SSL CA 2018'],white
-192.168.228.227,[],[],white
+192.168.228.227,['google.com'],['GTS CA 1O1'],white
 192.168.4.224,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
 192.168.24.221,['google.com'],['GTS CA 1O1'],white
 192.168.209.240,['google.com'],['GTS CA 1O1'],white
@@ -3099,7 +3099,7 @@
 192.168.108.217,['livessl.chinanetcenter.com'],['DigiCert CN RSA CA G1'],white
 192.168.210.26,['blackerrorshades.com'],['Sectigo RSA Domain Validation Secure Server CA'],white
 192.168.182.240,"['google.com', 'google.com', 'google.com']","['GTS CA 1O1', 'GTS CA 1O1', 'GTS CA 1O1']",white
-192.168.205.185,['www.govcenter.hu'],['NetLock K枚zjegyz艖i (Class A) Tan煤s铆tv谩nykiad贸'],white
+192.168.205.185,['www.govcenter.hu'],['NetLock K鏋歾jegyz鑹杋 (Class A) Tan鐓s閾唗v璋﹏ykiad璐'],white
 192.168.50.215,"['launch.getgo.com', 'livessl.chinanetcenter.com']","['DigiCert SHA2 Secure Server CA', 'DigiCert CN RSA CA G1']",white
 192.168.232.234,['google.com'],['GTS CA 1O1'],white
 192.168.142.143,"['autoupdate.opera.com', '*.opera.com', '*.operacdn.com']","['DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 High Assurance Server CA', 'DigiCert SHA2 Secure Server CA']",white

@@ -82,6 +82,7 @@ class FeatureType(object):
         self.min_packetsize_packet = 0  # 最小包大小
         self.mean_packetsize_packet = 0  # 平均包大小
         self.std_packetsize_packet = 0  # 均差包大小
+        self.payload_seq = []
         self.sequence = []  # 自TLS开始的有向序列
         self.num = 0  # 数据流数量
 
@@ -143,7 +144,7 @@ class FeatureType(object):
         self.size_ratio = cal_div(self.size_src, self.num_dst)
         self.by_s = cal_div(self.packetsize_size, self.time)
         self.pk_s = cal_div(self.pack_num, self.time)
-        print(self.name, self.cipher_subject, self.cipher_issue)
+        # print(self.name, self.cipher_subject, self.cipher_issue)
         # 加密信息
         # return [self.name, self.cipher_self_signature, self.cipher_certifcate_time, self.cipher_subject,
         #         self.cipher_issue, self.cipher_extension_count, self.cipher_sigature_alo, self.cipher_version, self.cipher_pubkey,
@@ -173,17 +174,6 @@ class FeatureType(object):
                 self.transition_matrix,
                 self.label, self.name
                 ]
-
-        #  dport
-        # return [self.pack_num, time, self.dport, self.flow_num, ip_src, self.cipher_num, self.packetsize_size,
-        #         self.max_time, self.min_time, self.mean_time, self.std_time, self.max_time_src, self.min_time_src, self.mean_time_src, self.std_time_src,
-        #         self.max_time_dst, self.min_time_dst, self.mean_time_dst, self.std_time_dst, self.max_time_flow, self.min_time_flow, self.mean_time_flow, self.std_time_flow,
-        #         self.max_packetsize_packet,  self.mean_packetsize_packet, self.std_packetsize_packet,
-        #         self.max_packetsize_src,  self.mean_packetsize_src, self.std_packetsize_src,
-        #         self.max_packetsize_dst, self.mean_packetsize_dst, self.std_packetsize_dst,
-        #         self.max_packetsize_flow, self.min_packetsize_flow, self.mean_packetsize_flow, self.std_packetsize_flow,
-        #         self.cipher_content_ratio
-        #         ]
 
 
 class FlowRecord:
@@ -227,7 +217,7 @@ def parse_ip_packet(eth, nth, timestamp):
     size = len(eth)  # 包大小
     feature.packetsize_packet_sequence.append(size)
     payload = len(ip.data.data)  # 有效负载大小
-    feature.payload_sequence.append(payload)
+    feature.payload_seq.append(payload)
     rest_load = None
     if isinstance(tcp_data, dpkt.tcp.TCP):
         feature.fin += 1 if cal_fin(tcp_data.flags) else 0
@@ -318,9 +308,9 @@ def parse_ip_packet(eth, nth, timestamp):
             if ack >= flow[flow_flag1].seq:
                 if len(flow[flow_flag1].data) != 0:
                     tem = flow[flow_flag1].data
+                    nth_flag = flow[flow_flag1].nth_seq[-1]
                     if tem[0] in {20, 21, 22}:
-
-                        rest_load, flag  = parse_tls_records(ip, tem, nth)
+                        rest_load, flag  = parse_tls_records(ip, tem, nth_flag)
 
                 try:
                     if rest_load != None and not len(data_flag):
@@ -686,7 +676,7 @@ def read_file(filename):
                     if len(value.data) != 0:
                         tem = value.data
                         if tem[0] in {20, 21, 22}:
-                            parse_tls_records(tem, tem, nth)
+                            parse_tls_records(tem, tem, value.nth_seq[-1])
             feature.pack_num = nth
             feature.time = time
             while len(feature.sequence) < 20:
@@ -722,17 +712,17 @@ def pre_pcap(base_dir, type):
             need_more_certificate = True
             feature.name = filename.replace('.pcap', '')
             feature.label = type
-            if feature.name in black_list:
-                feature.label = "black"
-            elif feature.name in white_list:
-                feature.label = "white"
-            else:
-                print(feature.name)
+            # if feature.name in black_list:
+            #     feature.label = "black"
+            # elif feature.name in white_list:
+            #     feature.label = "white"
+            # else:
+            #     print(feature.name)
             dataset.append(feature.tolist())
         if i % 50 == 0:
             print(i)
     dataset_np = np.array(dataset)
-    np.save('feature_npy/feature_test.npy', dataset_np)
+    np.save('feature_npy/feature_test_black_flow.npy', dataset_np)
     # with open("feature_base/feature_train_white.csv", "a+") as f:
     #     f_csv = csv.writer(f)
     #     for i,key in enumerate(dataset):
@@ -772,4 +762,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    pre_pcap('data/eta_flow/test/black/', 'black')

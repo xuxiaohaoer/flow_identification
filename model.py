@@ -9,49 +9,49 @@ import numpy as np
 from sklearn.model_selection import RandomizedSearchCV
 import time
 
-def RandomForest(x_train, y_train, x_test):
-    y_pred = []
-    rnd = RandomForestClassifier()
-    param_dist = {
-        "n_estimators": range(200, 300, 25),
-        "max_depth": [3, None],
-        "min_samples_split": range(2, 10, 2),
-        "max_leaf_nodes": range(100, 300, 20),
-        "criterion": ['gini', 'entropy']
-    }  # 随机搜索
+def RandomForest(x_train, y_train, x_test, flag):
 
-    # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
-    # rnd_clf = GridSearchCV(rnd, param_dist)
+    if flag == 'tuning':
+        rnd = RandomForestClassifier()
+        param_dist = {
+            "n_estimators": range(200, 300, 25),
+            "max_depth": [3, None],
+            "min_samples_split": range(2, 10, 2),
+            "max_leaf_nodes": range(100, 300, 20),
+            "criterion": ['gini', 'entropy']
+        }  # 随机搜索
 
-    rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
-    # rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=10)
+        # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
+        # rnd_clf = GridSearchCV(rnd, param_dist)
+        rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=15)
+        rnd_clf.fit(x_train, y_train)
+        print(rnd_clf.best_estimator_)
+    else:
+        rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
+        rnd_clf.fit(x_train, y_train)
 
-    rnd_clf.fit(x_train, y_train)
-    # print(rnd_clf.best_estimator_)
     y_pred = rnd_clf.predict(x_test)
-    # for sample in x_test:
-    #     y_pred.append(rnd_clf.predict([sample]))
     return y_pred
 
 
-def GradientBoosting(x_train, y_train, x_test):
-    y_pred = []
-    gbm = GradientBoostingClassifier()
-    param_dist = {
-        "n_estimators": range(150, 300, 50),
-        "min_samples_leaf": range(2, 10, 5),
-        "max_depth": [3, 4, None],
-        "max_leaf_nodes": range(100, 300, 100),
-    }
-    # gbm_clf = RandomizedSearchCV(gbm, param_distributions=param_dist, n_iter=10)
+def GradientBoosting(x_train, y_train, x_test, flag):
 
+    if flag == 'tuning':
+        gbm = GradientBoostingClassifier()
+        param_dist = {
+            "n_estimators": range(150, 300, 50),
+            "min_samples_leaf": range(2, 10, 5),
+            "max_depth": [3, 4, None],
+            "max_leaf_nodes": range(100, 300, 100),
+        }
+        gbm_clf = RandomizedSearchCV(gbm, param_distributions=param_dist, n_iter=10)
+        gbm_clf.fit(x_train, y_train)
+        print(gbm_clf.best_estimator_)
+    else:
+        gbm_clf= GradientBoostingClassifier(n_estimators=200, random_state=10, subsample=0.6)
+        gbm_clf.fit(x_train, y_train)
 
-    gbm_clf= GradientBoostingClassifier(n_estimators=200, random_state=10, subsample=0.6)
-    gbm_clf.fit(x_train, y_train)
-    # print(gbm_clf.best_estimator_)
     y_pred = gbm_clf.predict(x_test)
-    # for sample in x_test:
-    #     y_pred.append(gbm.predict([sample]))
     return y_pred
 
 

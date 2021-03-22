@@ -5,53 +5,63 @@ import index
 # from data_read import data_read
 from sklearn.preprocessing import MinMaxScaler
 from pre_data import pre_data
-
+from pre_data import pre_data_beh
+from pre_data import pre_data_flow
+from pre_data import pre_data_test
+from pre_data import pre_data_payload
 def main():
 
     print("begin system")
     # 导入测试集和训练集
-    features = ['flow', 'subject', 'issue', 'matrix']
-    features = ['subject']
-    Y = []
-    for feature in features:
-        x_train, x_test, y_train, y_label = pre_data(feature)
-        grad = 0
-        y_tem = []
+    # features = ['cipher', 'flow', 'subject', 'issue', 'matrix' ,'mix']
+    # features = ['subject']
+    # features = ['behavior', 'payload', 'direction']
+    # features = ['mix_seq_dir', 'mix_seq', 'mix_seq_dir_1', 'matrix']
+    # features = ['mix_seq_dir_1', 'mix_seq_1']
+    features = ['payload']
+    # features =  [i for i in range(100,1400, 100)]
+    print(features)
 
-    # lightGBM
-    # print("light GBM")
-    # y_pred = model.LightGBM(x_train, y_train, x_test, y_label)
-    # index.cal_index_1(y_pred, y_label)
-    # print("kmeans")
-    #
-    # y_pred = model.KmeansCluster(X)
-    # from sklearn import metrics
-    # index.Cal_ClusterIndex(Y, y_pred)
-    # print("DbsanCluster")
-    # y_pred = model.DbscanCluster(x_train, x_test)
-    # index.Cal_ClusterIndex(y_label, y_pred)
-    #     print("RandomFroest")
-    #     y_pred = model.RandomForest(x_train, y_train, x_test)
-    #     grad_tem = index.cal_index_sk(y_pred, y_label)
-    #     if grad < grad_tem:
-    #         grad = grad_tem
-    #         y_tem = y_pred
-    #
-    #     print("GradientBoosting")
-    #     y_pred = model.GradientBoosting(x_train, y_train, x_test)
-    #     grad_tem = index.cal_index_sk(y_pred, y_label)
-    #     if grad < grad_tem:
-    #         grad = grad_tem
-    #         y_tem = y_pred
-        print("Voting")
-        y_pred = model.Voting(x_train, y_train, x_test)
-        grad_tem = index.cal_index_sk(y_pred, y_label)
-        if grad < grad_tem:
-            grad = grad_tem
-            y_tem = y_pred
-        Y.append(y_tem)
-    print("###end result ###X")
-    index.cal_index_sk(cal_voting(Y), y_label)
+    for feature in features:
+        acc = []
+        pre = []
+        rec = []
+        print("this is made by {}".format(feature))
+        for length in range(10,80,5):
+            x_train, x_test, y_train, y_label = pre_data_beh(feature, length, '')
+            x = x_train + x_test
+            y = y_train + y_label
+            x_train, x_test, y_train, y_label = train_test_split(x,y, test_size=0.4, random_state=43)
+            y_pred = model.RandomForest(x_train, y_train, x_test, 'tuning')
+            acc_tem, pre_tem, rec_tem = index.cal_acc_pre_rec(y_pred, y_label)
+            acc.append(acc_tem)
+            pre.append(pre_tem)
+            rec.append(rec_tem)
+            print(acc_tem)
+            print(pre_tem)
+            print(rec_tem)
+
+
+        print(acc)
+        print(pre)
+        print(rec)
+        print("the result:", max(acc), acc.index(max(acc)))
+
+        # print("GradientBoosting")
+        # y_pred = model.GradientBoosting(x_train, y_train, x_test, 'tuning')
+        # grad_tem = index.cal_index_sk(y_pred, y_label)
+        # if grad < grad_tem:
+        #     grad = grad_tem
+        #     y_tem = y_pred
+        # print("Voting")
+        # y_pred = model.Voting(x_train, y_train, x_test)
+        # grad_tem = index.cal_index_sk(y_pred, y_label)
+        # if grad < grad_tem:
+        #     grad = grad_tem
+        #     y_tem = y_pred
+    #     Y.append(y_tem)
+    # print("###end result ###X")
+    # index.cal_index_sk(cal_voting(Y), y_label)
     #
     # print("DS end")
 

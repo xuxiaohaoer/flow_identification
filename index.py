@@ -2,8 +2,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import confusion_matrix
+
 def cal_index_sk(y_pred, y_label):
     print("acc:{}".format(accuracy_score(y_label, y_pred )))
+    print("pre:{}".format(precision_score(y_label, y_pred, )))
+    print("rec:{}".format(recall_score(y_label, y_pred)))
     print(confusion_matrix(y_label, y_pred, labels=[1,0]))
     matrix = confusion_matrix(y_label,y_pred, labels=[1,0])
     b_w = 0
@@ -14,11 +17,16 @@ def cal_index_sk(y_pred, y_label):
                 b_b += 1
             else:
                 b_w += 1
-
-    print(b_b, b_w)
     acc = accuracy_score(y_label, y_pred )
     print("grade:{}".format(acc - matrix[0][1]/sum(matrix[0])))
     return (acc - matrix[0][1]/sum(matrix[0]))
+
+
+def cal_acc_pre_rec(y_pred, y_label):
+    acc = round(accuracy_score(y_label, y_pred), 4)
+    pre = round(precision_score(y_label, y_pred),4)
+    rec = round(recall_score(y_label, y_pred),4)
+    return acc,pre, rec
 
 
 def cal_index(y_test, y_label):

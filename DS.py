@@ -9,6 +9,7 @@ from pre_data import pre_data_beh
 from pre_data import pre_data_flow
 from pre_data import pre_data_test
 from pre_data import pre_data_payload
+import numpy as np
 def main():
 
     print("begin system")
@@ -18,8 +19,9 @@ def main():
     # features = ['behavior', 'payload', 'direction']
     # features = ['mix_seq_dir', 'mix_seq', 'mix_seq_dir_1', 'matrix']
     # features = ['mix_seq_dir_1', 'mix_seq_1']
-    features = ['payload']
+    # features = ['cipher_bitFre','cipher_entropy', 'bitFre', 'entropy']
     # features =  [i for i in range(100,1400, 100)]
+    features = ['flow']
     print(features)
 
     for feature in features:
@@ -27,25 +29,19 @@ def main():
         pre = []
         rec = []
         print("this is made by {}".format(feature))
-        for length in range(10,80,5):
-            x_train, x_test, y_train, y_label = pre_data_beh(feature, length, '')
-            x = x_train + x_test
-            y = y_train + y_label
-            x_train, x_test, y_train, y_label = train_test_split(x,y, test_size=0.4, random_state=43)
-            y_pred = model.RandomForest(x_train, y_train, x_test, 'tuning')
-            acc_tem, pre_tem, rec_tem = index.cal_acc_pre_rec(y_pred, y_label)
-            acc.append(acc_tem)
-            pre.append(pre_tem)
-            rec.append(rec_tem)
-            print(acc_tem)
-            print(pre_tem)
-            print(rec_tem)
+        x_train, x_test, y_train, y_label = pre_data_flow(feature)
+        x = np.vstack((x_train, x_test))
+        y = y_train + y_label
+        x_train, x_test, y_train, y_label = train_test_split(x,y, test_size=0.4, random_state=43)
+        y_pred = model.RandomForest(x_train, y_train, x_test, '')
+        acc_tem, pre_tem, rec_tem = index.cal_acc_pre_rec(y_pred, y_label)
 
-
-        print(acc)
-        print(pre)
-        print(rec)
-        print("the result:", max(acc), acc.index(max(acc)))
+        print(acc_tem)
+        print(pre_tem)
+        print(rec_tem)
+        #
+        #
+        # print("the result:", max(acc), acc.index(max(acc)))
 
         # print("GradientBoosting")
         # y_pred = model.GradientBoosting(x_train, y_train, x_test, 'tuning')

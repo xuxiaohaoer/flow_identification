@@ -23,6 +23,7 @@ def cal_index_sk(y_pred, y_label):
 
 
 def cal_acc_pre_rec(y_pred, y_label):
+    print(confusion_matrix(y_label, y_pred, labels=[1, 0]))
     acc = round(accuracy_score(y_label, y_pred), 4)
     pre = round(precision_score(y_label, y_pred),4)
     rec = round(recall_score(y_label, y_pred),4)

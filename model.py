@@ -14,7 +14,7 @@ def RandomForest(x_train, y_train, x_test, flag):
     if flag == 'tuning':
         rnd = RandomForestClassifier()
         param_dist = {
-            "n_estimators": range(200, 300, 25),
+            "n_estimators": range(150, 350, 20),
             "max_depth": [3, None],
             "min_samples_split": range(2, 10, 2),
             "max_leaf_nodes": range(100, 300, 20),
@@ -23,11 +23,13 @@ def RandomForest(x_train, y_train, x_test, flag):
 
         # parameters = {"n_estimators": range(100, 300, 50)}  # 网格搜索
         # rnd_clf = GridSearchCV(rnd, param_dist)
-        rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=15)
+        rnd_clf = RandomizedSearchCV(rnd, param_distributions=param_dist, n_iter=30)
+
         rnd_clf.fit(x_train, y_train)
         print(rnd_clf.best_estimator_)
     else:
-        rnd_clf = RandomForestClassifier(n_estimators=300, max_leaf_nodes=150, n_jobs=-1) # 最初的模型
+        rnd_clf = RandomForestClassifier(criterion='entropy', max_leaf_nodes=280,
+                       n_estimators=290) # 最初的模型
         rnd_clf.fit(x_train, y_train)
 
     y_pred = rnd_clf.predict(x_test)

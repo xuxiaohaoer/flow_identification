@@ -4,7 +4,8 @@ from cipher_suite import index
 
 
 def cal(sequence):
-    if not sequence:
+    # if not sequence:
+    if sequence == []:
         return 0, 0, 0, 0
     Max = max(sequence)
     Min = min(sequence)
@@ -117,8 +118,9 @@ def cal_matrix(seq):
             tem1 = tem1 if tem1 < 15 else 14
             tem2 = tem2 if tem2 < 15 else 14
             a[tem1][tem2] += 1
-    sum = np.sum(a)
-    a = a/sum
+    sum = a.sum()
+    if sum!=0:
+        a = a/sum
     return a
 
 

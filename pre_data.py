@@ -3,12 +3,19 @@ import csv
 import numpy as np
 
 
+def data_read_flow():
+    dataset_b = np.load("feature_flow/train_black.npy", allow_pickle=True)
+    dataset_w = np.load("feature_flow/train_white.npy", allow_pickle=True)
+    dataset_t_b = np.load("feature_flow/test_black.npy", allow_pickle=True)
+    dataset_t_w = np.load("feature_flow/test_white.npy", allow_pickle=True)
+    dataset_t = dataset_t_b + dataset_t_w
 
+    return dataset_b, dataset_w, dataset_t
 
 def data_read():
-    dataset_b = np.load("feature_npy/feature_train_black.npy", allow_pickle=True)
-    dataset_w = np.load("feature_npy/feature_train_white.npy", allow_pickle=True)
-    dataset_t = np.load("feature_npy/feature_test.npy", allow_pickle=True)
+    dataset_b = np.load("feature_npy/train_black.npy", allow_pickle=True)
+    dataset_w = np.load("feature_npy/train_white.npy", allow_pickle=True)
+    dataset_t = np.load("feature_npy/test.npy", allow_pickle=True)
 
     return dataset_b, dataset_w, dataset_t
 
@@ -199,6 +206,8 @@ def pre_data_payload(length, length_1):
         payload.append(find_pay(pay, length_1))
     ratio = len(dataset_w) + len(dataset_b)
     return payload[:ratio], payload[ratio:], label[:ratio], label[ratio:]
+
+
 
 def pre_data_test(flag, length, model):
     dataset_b = np.load("../datacon/behavior/black_2.npy", allow_pickle=True)
@@ -395,8 +404,11 @@ def pre_data_beh(flag ,length, model):
 
 
 
-def pre_data(flag):
-    dataset_b, dataset_w, dataset_t= data_read()
+def pre_data(flag, type):
+    if type == 'flow':
+        dataset_b, dataset_w, dataset_t = data_read_flow()
+    else:
+        dataset_b, dataset_w, dataset_t= data_read()
 
     dataset = np.vstack((dataset_b,dataset_w, dataset_t))
     print(dataset.shape)
@@ -418,6 +430,13 @@ def pre_data(flag):
     label = []
     matrix = []
     flow = []
+
+    # 65
+    bitFre = []
+    entropy = []
+    cipher_bifFre = []
+    cipher_entropy = []
+    label_e = []
     for key in dataset:
 
         flow_one = []
@@ -457,21 +476,27 @@ def pre_data(flag):
             except ValueError:
                 max_cip_version = -1
 
+
         cipher_version.append(max_cip_version)
         subject_one = Find_first(key[53])
         issue_one = Find_first(key[54])
-
         cipher_one.append(max_cip_version)
 
+        if key[63] != 0 :
+            bitFre.append(key[65])
+            entropy.append(key[66:70])
+            cipher_bifFre.append(key[71])
+            cipher_entropy.append(key[73:76])
+            if key[-2] == 'black':
+                label_e.append(1)
+            else:
+                label_e.append(0)
 
         subject.append(subject_one)
         issue.append(issue_one)
 
         cipher.append(cipher_one)
 
-        # print(key[-3].reshape(1,-1))
-        # print(key[-3].flatten())
-        matrix.append(key[-3].flatten())
 
     ip_ans = oh_encoding(ip)
     subject_ans = oh_encoding(subject)
@@ -489,10 +514,9 @@ def pre_data(flag):
     minMax = MinMaxScaler()
     dataset_flow = minMax.fit_transform(dataset_flow)
 
-    dataset_mix = (np.hstack((flow, subject_ans, issue_ans, matrix)))
+    # dataset_mix = (np.hstack((flow, subject_ans, issue_ans, matrix)))
         # dataset_mix.append(list(dataset_flow[i]) + (list(issue_ans[i])) + list(subject_ans[i]))
     print("dataset is formed by {}".format(flag))
-    dataset_mix = select.fit_transform(dataset_mix)
     ratio =  len(dataset_b)+ len(dataset_w)
     if flag == 'flow':
         return dataset_flow[:ratio], dataset_flow[ratio:], label[:ratio], label[ratio:]
@@ -502,8 +526,6 @@ def pre_data(flag):
         return issue_ans[:ratio], issue_ans[ratio:], label[:ratio], label[ratio:]
     elif flag == 'matrix':
         return matrix[:ratio], matrix[ratio:], label[:ratio], label[ratio:]
-    elif flag == 'mix':
-        return  dataset_mix[:ratio], dataset_mix[ratio:], label[:ratio], label[ratio:]
     elif flag == 'payload':
         return payload[:ratio], payload[ratio:],  label[:ratio], label[ratio:]
     elif flag == 'time':
@@ -514,95 +536,19 @@ def pre_data(flag):
         return tcp_flag[:ratio], tcp_flag[ratio:], label[:ratio], label[ratio:]
     elif flag == 'speed':
         return speed[:ratio], speed[ratio:], label[:ratio], label[ratio:]
+    elif flag == 'bitFre':
+        return bitFre, label_e
+    elif flag == 'entropy':
+        return entropy, label_e
+    elif flag == 'cipher_entropy':
+        return cipher_entropy, label_e
+    elif flag == 'cipher_bitFre':
+        return cipher_bifFre, label_e
     else:
         print("select wrong")
 
 
-def pre_data_ae(flag):
-    dataset_b, dataset_w, dataset_t= data_read()
 
-    dataset = np.vstack((dataset_b,dataset_w, dataset_t))
-    print(dataset.shape)
-    # 前6000 训练集合，后4000测试集合
-    ip = []
-    subject = []
-    issue = []
-    cipher_version = []
-    label = []
-    matrix = []
-    d_b, d_w = [], []
-    for key  in dataset:
-        if key[-2] == 'black':
-            d_b.append(key)
-        else:
-            d_w.append(key)
-    dataset = np.vstack((d_w, d_b))
-    for key in dataset:
-        if key[-2] == 'black':
-            label.append(1)
-        elif key[-2] == 'white':
-            label.append(0)
-        else:
-            label.append(0)
-        ip.append(key[3])
-        max_cip_version = 0
-        for tem in key[-11]:
-            try:
-                if int(tem) > max_cip_version:
-                    max_cip_version = int(tem)
-            except ValueError:
-                max_cip_version = -1
-        cipher_version.append(max_cip_version)
-        subject.append(Find_first(key[53]))
-        issue.append(Find_first(key[54]))
-        # print(key[-3].reshape(1,-1))
-        # print(key[-3].flatten())
-        matrix.append(key[-3].flatten())
-    ip_ans = oh_encoding(ip)
-    subject_ans = oh_encoding(subject)
-    issue_ans = oh_encoding(issue)
-    dataset_flow = []
-    mean_list = [8, 12, 16, 20, 23, 26, 29, 32]
-    from sklearn.feature_selection import VarianceThreshold
-    for i in range(len(dataset)):
-        feature = []
-        for j in range(0, 3):
-            feature.append(float(dataset[i][j]))
-        for j in range(4, 51):
-            feature.append(float(dataset[i][j]))
-        # for j in range(4, 6):
-        #     feature.append(float(dataset[i][j]))
-        # for j in mean_list:
-        #     feature.append(float(dataset[i][j]))
-        feature.append(int(find_min((dataset[i][52]))))
-        # certificate_time
-        feature.append(find_self_signed((dataset[i][51])))
-        # 自签名
-        dataset_flow.append(feature)
-    from sklearn.preprocessing import MinMaxScaler
-
-    select = VarianceThreshold(threshold=0)
-    dataset_flow = select.fit_transform(dataset_flow)
-    minMax = MinMaxScaler()
-    dataset_flow = minMax.fit_transform(dataset_flow)
-    dataset_mix = []
-    dataset_mix = (np.hstack((dataset_flow, subject_ans, issue_ans, matrix)))
-        # dataset_mix.append(list(dataset_flow[i]) + (list(issue_ans[i])) + list(subject_ans[i]))
-    print("dataset is formed by {}".format(flag))
-    dataset_mix = select.fit_transform(dataset_mix)
-
-    if flag == 'flow':
-        return dataset_flow[:4000], dataset_flow[4000:], label[:4000], label[4000:]
-    elif flag == 'subject':
-        return subject_ans[:4000], subject_ans[4000:], label[:4000], label[4000:]
-    elif flag == 'issue':
-        return issue_ans[:4000], issue_ans[4000:], label[:4000], label[4000:]
-    elif flag == 'matrix':
-        return matrix[:4000], matrix[4000:], label[:4000], label[4000:]
-    elif flag == 'mix':
-        return  dataset_mix[:4000], dataset_mix[4000:], label[:4000], label[4000:]
-    else:
-        print("select wrong")
 def main():
     pre_data('flow')
 
@@ -612,10 +558,10 @@ def pre_data_flow(flag):
     :param flag: 返回什么特征集合
     :return: 返回的特征集合
     """
-    dataset_train_b = np.load("feature_npy/feature_train_black_flow.npy", allow_pickle=True)
-    dataset_train_w = np.load("feature_npy/feature_train_white_flow.npy", allow_pickle=True)
-    dataset_test_b = np.load("feature_npy/feature_test_black_flow.npy", allow_pickle=True)
-    dataset_test_w = np.load("feature_npy/feature_test_white_flow.npy", allow_pickle=True)
+    dataset_train_b = np.load("feature_flow/train_black.npy", allow_pickle=True)
+    dataset_train_w = np.load("feature_flow/train_white.npy", allow_pickle=True)
+    dataset_test_b = np.load("feature_flow/test_black.npy", allow_pickle=True)
+    dataset_test_w = np.load("feature_flow/test_white.npy", allow_pickle=True)
     dataset_train = np.vstack((dataset_train_b ,dataset_train_w))
     dataset_test = np.vstack((dataset_test_b , dataset_test_w))
     dataset = np.vstack((dataset_train, dataset_test))
@@ -628,11 +574,11 @@ def pre_data_flow(flag):
     matrix = []
     for key in dataset:
         if key[-2] == 'black':
-            label.append(1)
+            label.append(0)
         elif key[-2] == 'white':
-            label.append(0)
+            label.append(1)
         else:
-            label.append(0)
+            label.append(1)
         ip.append(key[3])
         max_cip_version = 0
         for tem in key[-11]:
@@ -646,7 +592,7 @@ def pre_data_flow(flag):
         issue.append(Find_first(key[54]))
         # print(key[-3].reshape(1,-1))
         # print(key[-3].flatten())
-        matrix.append(key[-3].flatten())
+        matrix.append(key[-6].flatten())
     ip_ans = oh_encoding(ip)
     subject_ans = oh_encoding(subject)
     issue_ans = oh_encoding(issue)
@@ -771,4 +717,4 @@ def pre_data_1():
 
 if __name__ == "__main__":
     # pre_data_beh('beh', 30, '')
-    pre_data_test('behavior', 40, '')
+    pre_data('flow', 'flow')

@@ -114,9 +114,15 @@ class featureType(object):
         self.ece = 0  # 标志位ECE的数量
         self.cwe = 0  # 标志位CWE的数量
 
+        self.client_hello_num = 0
+        self.server_hello_num = 0
+        self.certificate_num = 0
+
         self.client_hello_content = bytes(0)
         self.server_hello_content = bytes(0)
         self.certificate_content = bytes(0)
+        self.packet = []
+
 
         self.transition_matrix = np.zeros((15, 15), dtype=int)  # 马尔可夫转移矩阵
         self.label = ''  # 若有，则为具体攻击类型
@@ -192,6 +198,7 @@ class featureType(object):
                 # 63
                 self.transition_matrix,
                 self.tls_seq, self.payload_seq, self.dir_seq,
+                self.client_hello_num, self.server_hello_num, self.certificate_num,
                 self.label, self.name
                 ]
         # self.entropy, self.bitFre, self.max_entropy, self.min_entropy, self.mean_entropy, self.std_entropy,
@@ -211,7 +218,7 @@ class featureType(object):
         while len(self.content_payload) <3:
             self.content_payload.append(0)
         # print(contents)
-        return [contents, self.content_payload, self.label, self.name]
+        return [contents, self.content_payload, self.client_hello_num, self.label, self.name]
 
     def toCut(self):
         contents = []
@@ -228,3 +235,27 @@ class featureType(object):
                 result += (-key) * math.log(key, 2)
         return result
 
+    def toPac(self, flag):
+        res = []
+        if flag == 'label':
+            len_base = 5
+        else:
+            len_base = 4
+        for key in self.packet:
+            tem = []
+            i = 0
+            for value in key:
+                if flag == 'label':
+                    if (i == 0):
+                        tem.append(value)
+                    else:
+                        tem.append(value/255)
+                else:
+                    tem.append(value/255)
+            while len(tem) < len_base:
+                tem.insert(0, 0.0)
+            res.append(tem[: len_base])
+        while len(res)< 28:
+            res.append([0] * len_base)
+
+        return [res[:28], self.client_hello_num, self.client_hello_content, self.label, self.name]

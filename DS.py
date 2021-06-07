@@ -32,13 +32,16 @@ def main():
         x_train, x_test, y_train, y_label = pre_data_flow(feature)
         x = np.vstack((x_train, x_test))
         y = y_train + y_label
+        print(len(x))
+        print(len(y))
         x_train, x_test, y_train, y_label = train_test_split(x,y, test_size=0.4, random_state=43)
-        y_pred = model.RandomForest(x_train, y_train, x_test, '')
-        acc_tem, pre_tem, rec_tem = index.cal_acc_pre_rec(y_pred, y_label)
+        y_pred = model.RandomForest(x_train, y_train, x_test, 'tuning')
+        acc_tem, pre_tem, rec_tem, f1= index.cal_acc_pre_rec(y_pred, y_label)
 
         print(acc_tem)
         print(pre_tem)
         print(rec_tem)
+        print(f1)
         #
         #
         # print("the result:", max(acc), acc.index(max(acc)))

@@ -45,6 +45,9 @@ def pretty_name(name_type, name_value):
         name_value = 'unknown type: {0}'.format(name_type)
     return name_value
 
+def cal_bytes(tem):
+    return tem.to_bytes(length=1, byteorder='big', signed=False)
+
 
 def analyze_packet(timestamp, packet, nth):
     """
@@ -54,8 +57,9 @@ def analyze_packet(timestamp, packet, nth):
     eth = dpkt.ethernet.Ethernet(packet)
     feature.tls_seq.append(0)
     if isinstance(eth.data, dpkt.ip.IP):
-        parse_ip_packet(eth, nth, timestamp)
-        # parse_ip_data(packet, nth, timestamp)
+        parse_ip_packet(eth, nth, timestamp)# 切割负载信息
+        parse_ip_data(packet, nth, timestamp) # 切割全部信息
+
 
 def parse_ip_data(packet, nth, timestamp):
     eth = dpkt.ethernet.Ethernet(packet)
@@ -266,19 +270,37 @@ def parse_tcp_packet(ip, nth, timestamp):
             if len(stream) > 6:
                 if stream[2] == 1:  # sslv2 client hello
 
+                    feature.client_hello_num += 1
+
+                    packet = []
+
+                    packet.append(cal_bytes(1) + nth.to_bytes(length=4, byteorder='big', signed=False))
+                    packet.append(cal_bytes(2) + math.floor(timestamp * 1000).to_bytes(length=4, byteorder='big', signed=False))
+                    packet.append(cal_bytes(3) + (len(ip) + 14).to_bytes(length=4, byteorder='big', signed=False))
+                    packet.append(cal_bytes(4) + ip.src)
+                    packet.append(cal_bytes(5) + ip.dst)
+                    packet.append(cal_bytes(6) + ip.data.sport.to_bytes(length=4, byteorder='big', signed=False))
+                    packet.append(cal_bytes(7) + ip.data.dport.to_bytes(length=4, byteorder='big', signed=False))
+                    packet.append(cal_bytes(8) + bytes(3) + stream[2:3])  # 类型
+                    packet.append(cal_bytes(9) + bytes(3) + stream[1:2])  # 长度
+                    packet.append(cal_bytes(10) + bytes(2) +int(2).to_bytes(length=4, byteorder='big', signed=False)) # 版本
+                    packet.append(cal_bytes(11) + bytes(0) + stream[5:7])  # 长度
                     head = bytes(0)
-                    head += nth.to_bytes(length=2, byteorder='big', signed=False)
+                    head += nth.to_bytes(length=4, byteorder='big', signed=False)
 
                     # head += math.floor(timestamp * 1000).to_bytes(length=4, byteorder='big', signed=False)
 
 
-                    head += (len(ip) + 14).to_bytes(length=2, byteorder='big', signed=False)
+                    head += (len(ip) + 14).to_bytes(length=4, byteorder='big', signed=False)
                     head += ip.src
                     head += ip.dst
-                    head += ip.data.sport.to_bytes(length=2, byteorder='big', signed=False)
-                    head += ip.data.dport.to_bytes(length=2, byteorder='big', signed=False)
+                    head += ip.data.sport.to_bytes(length=4, byteorder='big', signed=False)
+                    head += ip.data.dport.to_bytes(length=4, byteorder='big', signed=False)
                     if (feature.client_hello_content == bytes(0)):
                         feature.client_hello_content = head + stream[2:]
+
+
+
 
 
                     # length = stream[1]
@@ -286,15 +308,20 @@ def parse_tcp_packet(ip, nth, timestamp):
 
                     feature.tls_seq[nth - 1] = stream[2]
                     feature.cipher_num = max(cipher_length, feature.cipher_num)
-                    tem = stream[6] * 256 + stream[7] + 11  # 加密组件开始的stream的index
+                    tem = stream[7] * 256 + stream[8] + 11  # 加密组件开始的stream的index
                     i = 0
                     while i < cipher_length:
                         cipher = 0
                         if tem + i + 2 < len(stream):
                             cipher = stream[tem + i + 2] + stream[tem + i + 1] * 256 + stream[tem + i] * 256 * 256
+                            packet.append(cal_bytes(12) + bytes(1) + stream[tem+i: tem+i+3])
                         if cipher not in feature.cipher_support:
                             feature.cipher_support.append(cipher)
                         i += 3
+                    if not feature.packet:
+                        feature.packet = packet
+
+
                 # print(nth, stream[6])
         # if (stream[0]) == 25:
         #     rest_load = parse_tls_records(ip, stream, nth)
@@ -450,7 +477,7 @@ def parse_tls_records(ip, stream, nth, nth_seq, timestamp):
                 # buf_ver = record.version.to_bytes(length=2, byteorder = 'big', signed=False)
                 # buf_len = record.length.to_bytes(length = 2, byteorder= 'big', signed=False)
                 # dataServerHello = buf_cont + buf_ver + buf_len + record.data
-
+                feature.server_hello_num += 1
                 feature.flow_num += 1
                 feature.cipher = (record.data[-2] + record.data[-3] * 256)
 
@@ -482,7 +509,7 @@ def parse_tls_records(ip, stream, nth, nth_seq, timestamp):
                 # print(socket.inet_ntoa(ip.dst))
                 # print(ip.data.sport)
                 # print(ip.data.dport)
-
+                feature.certificate_num += 1
                 head = bytes(0)
                 head += nth.to_bytes(length = 2, byteorder='big', signed=False)
                 # head += math.floor(timestamp *1000).to_bytes(length =4, byteorder= 'big', signed= False)
@@ -503,43 +530,61 @@ def parse_tls_records(ip, stream, nth, nth_seq, timestamp):
                     len_cer_tem = int.from_bytes(data[0:3], byteorder='big')
                     certificate = data[3:len_cer_tem + 3]
                     data = data[len_cer_tem + 3:]
-            if n == 0:
-                if handshake_type == 1:  # sslv3 tlsv1 client hello
-                    # feature.flag = True
-                    try:
-                        cipher_len = int(record.data[40 + record.data[38]])
-                    except IndexError as exception:
-                        cipher_len = 0
-                        print(feature.name)
+            if handshake_type == 1:
+                feature.client_hello_num += 1
 
-                    head = bytes(0)
-                    head += nth.to_bytes(length=2, byteorder='big', signed=False)
+            if handshake_type == 1:  # sslv3 tlsv1 client hello
+                # feature.flag = True
+                try:
+                    cipher_len = int(record.data[40 + record.data[38]])
+                except IndexError as exception:
+                    cipher_len = 0
+                    print(feature.name)
 
-                    # head += math.floor(timestamp * 1000).to_bytes(length=4, byteorder='big', signed=False)
+                head = bytes(0)
+                head += nth.to_bytes(length=2, byteorder='big', signed=False)
 
-                    # head += math.floor(timestamp * 1000).to_bytes(length=2, byteorder='big', signed=False)
-                    head += (len(ip) + 14).to_bytes(length=2, byteorder='big', signed=False)
-                    head += ip.src
-                    head += ip.dst
-                    head += ip.data.sport.to_bytes(length=2, byteorder='big', signed=False)
-                    head += ip.data.dport.to_bytes(length=2, byteorder='big', signed=False)
-                    if feature.client_hello_content == bytes(0):
+                # head += math.floor(timestamp * 1000).to_bytes(length=4, byteorder='big', signed=False)
 
-                        feature.client_hello_content = head + record.data[:6] + record.data[38:]
-                    # buf_cont = record.type.to_bytes(length=1, byteorder='big', signed=False)
-                    # buf_ver = record.version.to_bytes(length=2, byteorder='big', signed=False)
-                    # buf_len = record.length.to_bytes(length=2, byteorder='big', signed=False)
-                    # dataClientHello= buf_cont + buf_ver + buf_len + record.data
+                # head += math.floor(timestamp * 1000).to_bytes(length=2, byteorder='big', signed=False)
+                head += (len(ip) + 14).to_bytes(length=2, byteorder='big', signed=False)
+                head += ip.src
+                head += ip.dst
+                head += ip.data.sport.to_bytes(length=2, byteorder='big', signed=False)
+                head += ip.data.dport.to_bytes(length=2, byteorder='big', signed=False)
+                if feature.client_hello_content == bytes(0):
+                    feature.client_hello_content = head + record.data[:6] + record.data[38:]
 
-                    feature.cipher_num = max(cipher_len, feature.cipher_num)
-                    tem = 40 + record.data[38] + 1
-                    i = 0
-                    while i < cipher_len:
-                        cipher = record.data[tem + i] * 256 + record.data[tem + i + 1]
-                        if cipher not in feature.cipher_support:
-                            feature.cipher_support.append(cipher)
-                        i += 2
+                # buf_cont = record.type.to_bytes(length=1, byteorder='big', signed=False)
+                # buf_ver = record.version.to_bytes(length=2, byteorder='big', signed=False)
+                # buf_len = record.length.to_bytes(length=2, byteorder='big', signed=False)
+                # dataClientHello= buf_cont + buf_ver + buf_len + record.data
+                packet = []
+                packet.append(cal_bytes(1) + nth.to_bytes(length=4, byteorder='big', signed=False))
+                packet.append(cal_bytes(2) + math.floor(timestamp * 1000).to_bytes(length=4, byteorder='big', signed=False))
+                packet.append(cal_bytes(3) + (len(ip) + 14).to_bytes(length=4, byteorder='big', signed=False))
+                packet.append(cal_bytes(4) + ip.src)
+                packet.append(cal_bytes(5) + ip.dst)
+                packet.append(cal_bytes(6) + ip.data.sport.to_bytes(length=4, byteorder='big', signed=False))
+                packet.append(cal_bytes(7) + ip.data.dport.to_bytes(length=4, byteorder='big', signed=False))
+                packet.append(cal_bytes(8) + bytes(3) + record.data[0:1])  # 类型
+                packet.append(cal_bytes(9) + bytes(1) + record.data[1:4])  # 长度
+                packet.append(cal_bytes(10) + bytes(2) + record.data[4:6])  # 版本
+                packet.append(cal_bytes(11) + bytes(2) + record.data[record.data[38]+39:record.data[38]+41])
+                feature.cipher_num = max(cipher_len, feature.cipher_num)
+                tem = 40 + record.data[38] + 1
+                i = 0
+                while i < cipher_len:
+                    cipher = record.data[tem + i] * 256 + record.data[tem + i + 1]
+
+                    packet.append(cal_bytes(12) + bytes(2) + record.data[tem+i :tem+i +2])
+                    if cipher not in feature.cipher_support:
+                        feature.cipher_support.append(cipher)
+                    i += 2
                     # print(nth, record.data[40])
+                if not feature.packet:
+                    feature.packet = packet
+
 
         else:
             type.append(record.type)
@@ -635,7 +680,8 @@ def read_file(filename):
                     flag = timestamp
                 time = timestamp - flag
                 # if len(feature.content)<3:
-                if feature.client_hello_content == bytes(0) or feature.server_hello_content == bytes(0) or feature.certificate_content == bytes(0):
+                # if feature.client_hello_content == bytes(0) or feature.server_hello_content == bytes(0) or feature.certificate_content == bytes(0):
+                if not feature.packet:
                     analyze_packet(time, packet, nth)
 
                     nth += 1
@@ -669,9 +715,19 @@ def pre_flow(base_dir, save_dir, label):
         read_file(base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         feature.label = label
-        dataset.append(feature.toCut())
+        # print(feature.toPac())
+
+
+        # for key in tem[0]:
+        #
+        #     for value in key:
+        #         print(value)
+        dataset.append(feature.toPac(flag='label'))
+
+
         # if i % 50 == 0:
         #     print(i)
+
     dataset_np = np.array(dataset)
     np.save(save_dir, dataset_np)
 
@@ -732,9 +788,10 @@ def main():
     # base_dir = "data/eta/datacon_eta/train/white/"
     # base_dir = "data/资格赛数据分析/"
     # base_dir = 'data/eta/datacon_eta/train/white/'
-    read_file(base_dir + '192.168.109.33.pcap')
+    # read_file(base_dir + '192.168.109.33.pcap')
+    read_file(base_dir + '192.168.0.67.pcap')
     # feature.toCut()
-    print(feature.content)
+    # print(feature.content)
     feature.toSeq()
 
     # for filename in os.listdir(base_dir):
@@ -754,10 +811,11 @@ def main():
 if __name__ == "__main__":
     print("begin")
     # main()
-    pre_flow("data/eta_flow/train/black/", 'f_data_content_1/train_black.npy', 'black')
-    pre_flow("data/eta_flow/train/white/", 'f_data_content_1/train_white.npy', 'white')
-    pre_flow("data/eta_flow/test/black/", 'f_data_content_1/test_black.npy', 'black')
-    pre_flow("data/eta_flow/test/white/", 'f_data_content_1/test_white.npy', 'white')
+    dir = 'f_data_client_hello_label'
+    pre_flow("data/eta_flow/train/black/", '{}/train_black.npy'.format(dir), 'black')
+    pre_flow("data/eta_flow/train/white/", '{}/train_white.npy'.format(dir), 'white')
+    pre_flow("data/eta_flow/test/black/", '{}/test_black.npy'.format(dir), 'black')
+    pre_flow("data/eta_flow/test/white/", '{}/test_white.npy'.format(dir), 'white')
     #
     # pre_pcap("data/eta/datacon_eta/train/black/", "feature_npy/train_black.npy", "black")
     # pre_pcap("data/eta/datacon_eta/train/white/", "feature_npy/train_white.npy", "white")

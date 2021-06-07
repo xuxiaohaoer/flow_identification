@@ -565,6 +565,7 @@ def pre_data_flow(flag):
     dataset_train = np.vstack((dataset_train_b ,dataset_train_w))
     dataset_test = np.vstack((dataset_test_b , dataset_test_w))
     dataset = np.vstack((dataset_train, dataset_test))
+
     # 前6000 训练集合，后4000测试集合
     ip = []
     subject = []
@@ -573,26 +574,27 @@ def pre_data_flow(flag):
     label = []
     matrix = []
     for key in dataset:
-        if key[-2] == 'black':
-            label.append(0)
-        elif key[-2] == 'white':
-            label.append(1)
-        else:
-            label.append(1)
-        ip.append(key[3])
-        max_cip_version = 0
-        for tem in key[-11]:
-            try:
-                if int(tem) > max_cip_version:
-                    max_cip_version = int(tem)
-            except ValueError:
-                max_cip_version = -1
-        cipher_version.append(max_cip_version)
-        subject.append(Find_first(key[53]))
-        issue.append(Find_first(key[54]))
-        # print(key[-3].reshape(1,-1))
-        # print(key[-3].flatten())
-        matrix.append(key[-6].flatten())
+        if (key[-5] != 0):
+            if key[-2] == 'black':
+                label.append(0)
+            elif key[-2] == 'white':
+                label.append(1)
+            else:
+                label.append(1)
+            ip.append(key[3])
+            max_cip_version = 0
+            # for tem in key[-11]:
+            #     try:
+            #         if int(tem) > max_cip_version:
+            #             max_cip_version = int(tem)
+            #     except ValueError:
+            #         max_cip_version = -1
+            cipher_version.append(max_cip_version)
+            subject.append(Find_first(key[53]))
+            issue.append(Find_first(key[54]))
+            # print(key[-3].reshape(1,-1))
+            # print(key[-3].flatten())
+            matrix.append(key[-9].flatten())
     ip_ans = oh_encoding(ip)
     subject_ans = oh_encoding(subject)
     issue_ans = oh_encoding(issue)
@@ -601,19 +603,20 @@ def pre_data_flow(flag):
     from sklearn.feature_selection import VarianceThreshold
     for i in range(len(dataset)):
         feature = []
-        for j in range(0, 3):
-            feature.append(float(dataset[i][j]))
-        for j in range(4, 51):
-            feature.append(float(dataset[i][j]))
-        # for j in range(4, 6):
-        #     feature.append(float(dataset[i][j]))
-        # for j in mean_list:
-        #     feature.append(float(dataset[i][j]))
-        feature.append(int(find_min((dataset[i][52]))))
-        # certificate_time
-        feature.append(find_self_signed((dataset[i][51])))
-        # 自签名
-        dataset_flow.append(feature)
+        if dataset[i][-5] != 0:
+            for j in range(0, 3):
+                feature.append(float(dataset[i][j]))
+            for j in range(4, 51):
+                feature.append(float(dataset[i][j]))
+            # for j in range(4, 6):
+            #     feature.append(float(dataset[i][j]))
+            # for j in mean_list:
+            #     feature.append(float(dataset[i][j]))
+            feature.append(int(find_min((dataset[i][52]))))
+            # certificate_time
+            feature.append(find_self_signed((dataset[i][51])))
+            # 自签名
+            dataset_flow.append(feature)
     from sklearn.preprocessing import MinMaxScaler
 
     select = VarianceThreshold(threshold=0)

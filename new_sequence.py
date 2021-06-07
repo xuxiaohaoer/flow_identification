@@ -15,7 +15,7 @@ from cal import *
 
 import dpkt
 from flowFeature import featureType
-
+from tqdm import tqdm
 import math
 
 
@@ -23,7 +23,9 @@ need_more_parse = True  # 需要更多TLS信息
 need_more_certificate = True
 need_http = True
 
-
+"""
+提取特征
+"""
 
 
 class flowRecord:
@@ -260,7 +262,7 @@ def parse_tcp_packet(ip, nth, timestamp):
 
                     # length = stream[1]
                     # dataClientHello = stream[:length+2]
-
+                    feature.client_hello_num += 1
                     feature.tls_seq[nth-1] = stream[2]
                     feature.cipher_num = max(cipher_length, feature.cipher_num)
                     tem = stream[6]*256 + stream[7] + 11  # 加密组件开始的stream的index
@@ -362,7 +364,7 @@ def parse_tls_records(stream, nth, nth_seq):
 
     # multiple 只解压了第一个报文
     try:
-        if records[0].type == 21:
+        if records[0].type == 22:
             handshake_type = records[0].data[0]
             # 握手格式要求，避免加入application data等信息
             if handshake_type in {1,2,11,12,14,16,21}:
@@ -422,7 +424,7 @@ def parse_tls_records(stream, nth, nth_seq):
                 # buf_ver = record.version.to_bytes(length=2, byteorder = 'big', signed=False)
                 # buf_len = record.length.to_bytes(length = 2, byteorder= 'big', signed=False)
                 # dataServerHello = buf_cont + buf_ver + buf_len + record.data
-
+                feature.server_hello_num +=1
                 feature.flow_num += 1
                 feature.cipher = (record.data[-2] + record.data[-3] * 256)
             if handshake_type == 11:  # certificate
@@ -431,7 +433,7 @@ def parse_tls_records(stream, nth, nth_seq):
                 # buf_ver = record.version.to_bytes(length=2, byteorder='big', signed=False)
                 # buf_len = record.length.to_bytes(length=2, byteorder='big', signed=False)
                 # dataCertificate = buf_cont + buf_ver + buf_len + record.data
-
+                feature.certificate_num += 1
                 len_cer = int.from_bytes(record.data[4:7], byteorder='big')  # 转换字节流为十进制
                 data = record.data[7:]
                 tem = 0
@@ -441,6 +443,8 @@ def parse_tls_records(stream, nth, nth_seq):
                     len_cer_tem = int.from_bytes(data[0:3], byteorder='big')
                     certificate = data[3:len_cer_tem + 3]
                     data = data[len_cer_tem + 3:]
+            if handshake_type == 1:
+                feature.client_hello_num += 1
             if n == 0:
                 if handshake_type == 1:  # sslv3 tlsv1 client hello
                     # feature.flag = True
@@ -588,20 +592,18 @@ def read_file(filename):
 
 
 def pre_flow(base_dir, save_dir, label):
-    i= 0
-    dataset = []
-    for filename in os.listdir(base_dir):
 
-        i += 1
+    dataset = []
+    for filename in tqdm(os.listdir(base_dir)):
+
         read_file(base_dir + filename)
         feature.name = filename.replace('.pcap', '')
         feature.label = label
         dataset.append(feature.tolist())
-        if i % 50 == 0:
-            print(i)
-    print(i)
+
     dataset_np = np.array(dataset)
     np.save(save_dir, dataset_np)
+
 
 def pre_pcap(base_dir, save_dir, type):
     name_list =[]
@@ -687,4 +689,4 @@ if __name__ == "__main__":
     # pre_pcap("data/eta/datacon_eta/train/black/", "feature_npy/train_black.npy", "black")
     # pre_pcap("data/eta/datacon_eta/train/white/", "feature_npy/train_white.npy", "white")
     # pre_pcap("data/eta/datacon_eta/test/", "feature_npy/test.npy", "test")
-    # print("end")
+    print("end")
